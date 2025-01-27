@@ -1,10 +1,10 @@
+import { getToken } from './getToken.ts'
 export function setupForm () {
     const App = document.getElementById('app') as HTMLElement
     const fragment = document.createDocumentFragment() as DocumentFragment
 
     const LoginPage = document.createElement('div') as HTMLDivElement
     LoginPage.id = 'LoginPage'
-    LoginPage.className = 'deactive'
 
     const context = document.createElement('div') as HTMLDivElement
     context.className = 'context'
@@ -39,6 +39,7 @@ export function setupForm () {
     inputGroup1.className = 'input-group'
 
     const input1 = document.createElement('input') as HTMLInputElement
+    input1.autocomplete = 'on'
     input1.type = 'text'
     input1.id = 'name'
     input1.onblur = (event) => checkInput(event.target as HTMLInputElement)
@@ -54,6 +55,7 @@ export function setupForm () {
     inputGroup2.className = 'input-group'
 
     const input2 = document.createElement('input') as HTMLInputElement
+    input2.autocomplete = 'on'
     input2.type = 'password'
     input2.id = 'password'
     input2.onblur = (event) => checkInput(event.target as HTMLInputElement)
@@ -84,25 +86,13 @@ export function setupForm () {
     mainButton.appendChild(btnText)
     mainButton.appendChild(form)
 
-    const area = document.createElement('div') as HTMLDivElement
-    area.className = 'area'
-
-    const ul = document.createElement('ul') as HTMLUListElement
-    ul.className = 'circles'
-
-    for (let i = 0; i < 10; i++) {
-        const li = document.createElement('li') as HTMLLIElement
-        ul.appendChild(li)
-    }
-
-    area.appendChild(ul)
-
     fragment.appendChild(context)
     fragment.appendChild(mainButton)
 
     LoginPage.appendChild(fragment)
     App.appendChild(LoginPage)
-    App.appendChild(area)
+
+    getToken()
 }
 const openForm = (): void => {
     const button = document.getElementById('mainButton') as HTMLElement;

@@ -1,5 +1,6 @@
 import { closeForm } from './loginHandler';
 import { setToken } from './tokenHandler';
+import { login } from '../main';
 
 export function getToken() {
     const LoginForm = document.querySelector('form.modal') as HTMLFormElement;
@@ -59,6 +60,7 @@ export function getToken() {
         usernameInput.className = '';
         passwordInput.className = '';
         closeForm();
+        login();
     };
 }
 
