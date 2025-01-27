@@ -2,6 +2,10 @@ export function setupForm () {
     const App = document.getElementById('app') as HTMLElement
     const fragment = document.createDocumentFragment() as DocumentFragment
 
+    const LoginPage = document.createElement('div') as HTMLDivElement
+    LoginPage.id = 'LoginPage'
+    LoginPage.className = 'deactive'
+
     const context = document.createElement('div') as HTMLDivElement
     context.className = 'context'
 
@@ -95,9 +99,10 @@ export function setupForm () {
 
     fragment.appendChild(context)
     fragment.appendChild(mainButton)
-    fragment.appendChild(area)
 
-    App.appendChild(fragment)
+    LoginPage.appendChild(fragment)
+    App.appendChild(LoginPage)
+    App.appendChild(area)
 }
 const openForm = (): void => {
     const button = document.getElementById('mainButton') as HTMLElement;
