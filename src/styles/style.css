@@ -1,6 +1,6 @@
 :root {
   --primary-color: #0fa4af;
-  --secondary-color: #afdde5;
+  --secondary-color: #003134;
   --logo-color: #964734;
   --background-color: radial-gradient(ellipse at bottom, #003135 0%, #024950 100%);
 }
@@ -11,7 +11,7 @@
   box-sizing: border-box;
 }
 
-#app {
+#LoginPage {
   padding: 20px;
   display: flex;
   min-height: 100vh;
@@ -99,7 +99,7 @@
   flex-direction: column;
   background-color: inherit;
   transform-origin: center center;
-  background: var(--primary-color);
+  background: var(--secondary-color);
   transform: scale(0.000001, 0.00001);
   transition: all 0.2s ease-in;
 }
@@ -118,17 +118,18 @@
 
 .form-title {
   margin-bottom: 15px;
+  font-weight: 600;
 }
 
 .form-button {
   width: 100%;
   padding: 10px;
-  color: var(--primary-color);
+  color: var(--secondary-color);
   margin-top: 10px;
   max-width: 400px;
   text-align: center;
-  border: solid 1px white;
-  background-color: white;
+  border: solid 1px var(--primary-color);
+  background-color: var(--primary-color);
   transition: color 0.2s ease-in, background-color 0.2s ease-in;
 }
 
@@ -136,6 +137,22 @@
   color: white;
   cursor: pointer;
   background-color: transparent;
+}
+
+/* handle MF autofill */
+input:-webkit-autofill {
+  box-shadow: 0 0 0 30px var(--secondary-color) inset !important;
+  -webkit-text-fill-color: white !important; 
+}
+
+input:-webkit-autofill:hover {
+  box-shadow: 0 0 0 30px var(--secondary-color) inset !important; 
+  -webkit-text-fill-color: white !important; 
+}
+input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 30px var(--secondary-color) inset !important; 
+  -webkit-text-fill-color: white !important;
+  caret-color: white !important;
 }
 
 .input-group {
@@ -170,14 +187,10 @@
   transition: all 0.2s ease-in;
 }
 
-.input-group input:focus {
-  box-shadow: 0 1px 0 0 white;
-}
-
 .input-group input:focus + label,
 .input-group input.active + label {
   font-size: 12px;
-  background: var(--primary-color);
+  background: var(--secondary-color);
   padding: 0 5px;
   transform: translateY(-6px) translateX(10px);
   left: 0px;
@@ -300,12 +313,18 @@
   animation-duration: 11s;
 }
 
-.error {
+#LoginError {
   display: none;
   font-size: 16px;
   padding: 7px;
   color: var(--background-color);
-  background-color: var(--logo-color)
+  background-color: var(--logo-color);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.deactive {
+  display: none;
 }
 
 @keyframes animate {

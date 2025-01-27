@@ -1,5 +1,5 @@
-import { setupForm } from './scripts/formHandler.ts'
-import { getToken } from './scripts/getToken.ts'
+import { setupForm } from './scripts/LoginHandler.ts'
+import { getToken } from './scripts/GetToken.ts'
 
 setupForm()
 getToken()

@@ -20,6 +20,7 @@ export function setupForm () {
 
     const form = document.createElement('form') as HTMLFormElement
     form.className = 'modal'
+    form.spellcheck = false
 
     const closeButton = document.createElement('div') as HTMLDivElement
     closeButton.className = 'close-button'
@@ -61,7 +62,7 @@ export function setupForm () {
     inputGroup2.appendChild(label2)
 
     const error = document.createElement('div') as HTMLDivElement
-    error.className = 'error'
+    error.id = 'LoginError'
     error.textContent = 'error: '
 
     const button = document.createElement('button') as HTMLButtonElement
@@ -86,8 +87,8 @@ export function setupForm () {
     ul.className = 'circles'
 
     for (let i = 0; i < 10; i++) {
-    const li = document.createElement('li') as HTMLLIElement
-    ul.appendChild(li)
+        const li = document.createElement('li') as HTMLLIElement
+        ul.appendChild(li)
     }
 
     area.appendChild(ul)
@@ -113,13 +114,13 @@ const checkInput = (input: HTMLInputElement): void => {
     }
 };
 
-const closeForm = (): void => {
+export const closeForm = (): void => {
     const button = document.getElementById('mainButton') as HTMLElement;
     button.className = '';
 };
 
 document.addEventListener("keyup", (e: KeyboardEvent): void => {
-    if (e.key === "Escape" || e.key === "Enter") {
+    if (e.key === "Escape") {
         closeForm();
     }
 });
