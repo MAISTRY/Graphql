@@ -1,3 +1,6 @@
+import './styles/base.css'
+import './styles/login.css'
+import './styles/core.css'
 import { setupPage } from './scripts/pageHandler.ts'
 import { setupForm } from './scripts/loginHandler.ts'
 import { getStoredToken, removeToken } from './scripts/tokenHandler.ts'

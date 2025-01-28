@@ -1,0 +1,82 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  padding: 60px;
+}
+
+.section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+
+/* Custom Sizes for Specific Sections */
+.section-large {
+  grid-column: span 3;
+}
+
+.section-tall {
+  grid-row: span 2;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* 3 divs per row */
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* 2 divs per row */
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    grid-template-columns: 1fr;
+    /* Single column for phones */
+  }
+
+  .section-large,
+  .section-tall {
+    grid-column: span 1;
+    /* Reset to single column on small screens */
+    grid-row: span 1;
+    /* Reset to single row on small screens */
+  }
+}
