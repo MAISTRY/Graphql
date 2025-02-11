@@ -3,16 +3,19 @@ import './styles/login.css'
 import './styles/core.css'
 import { setupPage } from './scripts/pageHandler.ts'
 import { setupForm } from './scripts/loginHandler.ts'
-import { getStoredToken, removeToken } from './scripts/tokenHandler.ts'
+import { setupCorePage } from './scripts/coreHandler.ts'
+import { getStoredToken, removeToken, testToken } from './scripts/tokenHandler.ts'
+import { insertData } from './scripts/dataHandler.ts'
 
-export function router() {
+export async function router() {
     setupPage()
-
-    if (!getStoredToken()) {
-        setupForm()
+    if ( await testToken() === false) {
+        setupForm();
+        removeToken();
     } else {
         console.log('token found')
-        // setup main page
+        setupCorePage()
+        insertData()
     }
 }
 
