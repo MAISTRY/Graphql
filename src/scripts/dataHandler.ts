@@ -1,29 +1,58 @@
 import { queryData } from './queryHandler.ts'
 // import { LeadershipQuery, LeadershipVariables } from './queryHandler.ts'
-import { userXPQuery, userLevelQuery, userQuery } from './queryHandler.ts'
+import { userXPQuery, userLevelQuery, userQuery, RatioQuery, AuditsQuery } from './queryHandler.ts'
 import { TechnoSkillsQuery, TechniSkillsQuery } from './queryHandler.ts'
 import ApexCharts from 'apexcharts'
 
 export function insertData() {
     insertProfileData()
     insertChartsData()
+    insertRatioData()
+    insertAuditsData()
+}
+async function insertAuditsData() {
+    const Audits = await queryData(AuditsQuery)
+
+    const validAudits = Audits.data.user[0].validAudits.nodes;
+    const failedAudits = Audits.data.user[0].failedAudits.nodes;
+
+    const passTableBody = document.getElementById("passAuditTable")?.getElementsByTagName("tbody")[0];
+    const failTableBody = document.getElementById("failAuditTable")?.getElementsByTagName("tbody")[0];
+
+    function insertRows(audits: any[], tableBody: HTMLTableSectionElement) {
+        audits.forEach(audit => {
+            const row = tableBody.insertRow();
+            const captainCell = row.insertCell(0);
+            const pathCell = row.insertCell(1);
+
+            captainCell.textContent = audit.group.captainLogin;
+            pathCell.textContent = audit.group.path;
+        });
+    }
+
+    if (passTableBody) {
+        insertRows(validAudits, passTableBody);
+    }
+    if (failTableBody) {
+        insertRows(failedAudits, failTableBody);
+    }
 }
 
 async function insertProfileData() {
-    const Profile = await queryData(userQuery)
     const XP = await queryData(userXPQuery)
     const level = await queryData(userLevelQuery)
+    const Profile = await queryData(userQuery)
 
     const fnameHolder = document.getElementById('fnameHolder') as HTMLSpanElement
     const lnameHolder = document.getElementById('lnameHolder') as HTMLSpanElement
     const emailHolder = document.getElementById('emailHolder') as HTMLSpanElement
     const usernameHolder = document.getElementById('usernameHolder') as HTMLSpanElement
-    const levelHolder = document.getElementById('levelHolder') as HTMLSpanElement
+    const levelHolder = document.getElementById('levelHolder') as HTMLDivElement
     const xpHolder = document.getElementById('xpHolder') as HTMLSpanElement
-
     const profileImage = document.getElementById('profileImage') as HTMLImageElement
     const picUploadId = Profile.data?.user?.[0]?.attrs?.['pro-picUploadId'];
     profileImage.src = `https://learn.reboot01.com/api/storage?token=${localStorage.getItem('token')}&fileId=${picUploadId}`;
+
 
     fnameHolder.textContent = Profile.data?.user?.[0]?.attrs?.firstName;
     lnameHolder.textContent = Profile.data?.user?.[0]?.attrs?.lastName;
@@ -31,6 +60,26 @@ async function insertProfileData() {
     usernameHolder.textContent = localStorage.getItem('login')
     levelHolder.textContent = level.data?.user?.[0]?.events?.[0]?.level;
     xpHolder.textContent = XP.data.transaction_aggregate.aggregate.sum.amount.toString()
+}
+
+async function insertRatioData() {
+    const Ratio = await queryData(RatioQuery)
+
+    const doneProgress = document.getElementById('doneProgress') as HTMLProgressElement
+    const receivedProgress = document.getElementById('receivedProgress') as HTMLProgressElement
+    const doneValue = document.getElementById('doneValue') as HTMLSpanElement
+    const receivedValue = document.getElementById('receivedValue') as HTMLSpanElement
+
+    const totalUp = Ratio?.data?.user?.[0]?.totalUp;
+    const totalDown = Ratio?.data?.user?.[0]?.totalDown;
+    const auditRatio = Ratio?.data?.user?.[0]?.auditRatio;
+
+    doneProgress.value = totalUp;
+    doneProgress.max = totalDown;
+    doneValue.textContent = totalUp;
+    receivedProgress.value = totalDown;
+    receivedProgress.max = totalDown;
+    receivedValue.textContent = totalDown;
 }
 
 async function insertChartsData() {
@@ -45,8 +94,8 @@ async function insertChartsData() {
     var options1 = {
         chart: {
             type: "radar",
-            height: 400,
-            width: 400,
+            height: 500,
+            width: 500,
             foreColor: "#fff",
             toolbar: {
                 show: false,
@@ -101,8 +150,8 @@ async function insertChartsData() {
     var options2 = {
         chart: {
             type: "radar",
-            height: 400,
-            width: 400,
+            height: 480,
+            width: 500,
             foreColor: "#fff",
             toolbar: {
                 show: false,

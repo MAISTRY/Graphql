@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway:400,500,300");
-@import url("https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@100..900&display=swap');
 :root {
   --primary-color: #0fa4af;
@@ -7,6 +6,7 @@
   --secondary-color: #003134;
   --logo-color: #964734;
   --text-color: #e6f7f9;
+  --chart-line-color: #9cd9d0;
   --background-color: radial-gradient(
     ellipse at bottom,
     #003135 0%,
@@ -22,11 +22,11 @@
   box-sizing: border-box;
 }
 
-#app {
-  font-family: "Arvo", sans-serif;
-  min-height: 100vh;
-  line-height: 1.6;
+body {
   padding: 20px;
+  line-height: 1.6;
+  min-height: 100vh;
+  font-family: "Outfit", sans-serif;
   background: var(--background-color);
 }
 

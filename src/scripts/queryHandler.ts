@@ -91,6 +91,40 @@ export const TechniSkillsQuery = `{
 }
 `;
 
+export const RatioQuery = `
+{
+user {
+    totalUp
+    totalDown
+    auditRatio
+    }
+}
+`;
+
+export const AuditsQuery = `
+{
+  user {
+    validAudits: audits_aggregate(where: {grade: {_gte: 1}}) {
+      nodes {
+        group {
+          captainLogin
+          path
+        }
+      }
+    }
+    failedAudits: audits_aggregate(where: {grade: {_lt: 1}}) {
+      nodes {
+        group {
+          captainLogin
+          path
+        }
+      }
+    }
+  }
+}
+`;
+
+
 export const LeadershipVariables: Record<string, any> = {
     "userLogin": localStorage.getItem('login')
 };
