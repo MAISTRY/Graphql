@@ -93,9 +93,21 @@ export function setupCorePage() {
     LevelTitle.textContent = 'User Level'
 
     const LevelContent = document.createElement('div')
-    LevelContent.classList.add('level-circle')
-    LevelContent.id = 'levelHolder'
+    LevelContent.classList.add('level-content')
 
+    const levelProgress = document.createElement('div')
+    levelProgress.id = 'levelProgress'
+
+    const levelHolder = document.createElement('div')
+    levelHolder.classList.add('level-circle')
+    levelHolder.id = 'levelHolder'
+
+    const NextLevel = document.createElement('div')
+    NextLevel.id = 'NextLevel'
+
+    LevelContent.appendChild(levelProgress)
+    LevelContent.appendChild(NextLevel)
+    LevelContent.appendChild(levelHolder)
     level.appendChild(LevelTitle)
     level.appendChild(LevelContent)
 

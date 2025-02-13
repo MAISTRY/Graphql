@@ -3,7 +3,6 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-row-gap: 40px;
   grid-column-gap: 40px;
-  
 }
 
 .section {
@@ -70,6 +69,7 @@ td {
   color: var(--primary-color);
   align-self: center;
   border-bottom: 3px solid var(--primary-color);
+  width: -webkit-fill-available;
 }
 
 .content {
@@ -131,11 +131,29 @@ td {
   margin: 0 auto;
 }
 
+#levelProgress {
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--chart-line-color);
+}
+
+#NextLevel {
+  font-size: 20px;
+  font-weight: 500;
+  color: white;
+}
+
 #level {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+}
+
+.level-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .level-circle {
@@ -191,23 +209,45 @@ td {
 }
 
 progress {
-  width: 87%;
+  width: calc(100% - 65px);
   height: 20px;
+  /* appearance: none; */
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-progress::-webkit-progress-bar {
-  background-color: #ddd; /* Background color */
-  border-radius: 5px;
+/* Style for #doneProgress */
+#doneProgress::-webkit-progress-value {
+  background-color: white; /* Custom color */
 }
 
-progress::-webkit-progress-value {
-  background-color: #4caf50; /* Progress color */
-  color: #000;
-  border-radius: 5px;
+/* Style for #receivedProgress */
+/* #receivedProgress::-webkit-progress-value {
+  background-color: #9cd9d0;
+} */
+.bar1::-webkit-progress-value {
+  background-color: #9cd9d0;
+}
+.bar2::-webkit-progress-value {
+  background-color: yellow;
+}
+.bar3::-webkit-progress-value {
+  background-color: orange;
+}
+.bar4::-webkit-progress-value {
+  background-color: red;
+}
+
+/* Firefox support */
+#doneProgress::-moz-progress-bar {
+  background-color: green;
+}
+
+#receivedProgress::-moz-progress-bar {
+  background-color: rgb(138, 138, 184);
 }
 
 /* Responsive Adjustments */
-
 @media (max-width: 1300px) {
   .container {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -216,13 +256,13 @@ progress::-webkit-progress-value {
 
 @media (max-width: 900px) {
   .container {
-    grid-template-columns: repeat(2, minmax(0, 1fr)); 
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 600px) {
   .container {
-    grid-template-columns: repeat(1, minmax(0, 1fr)); 
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
   .section-large {
     grid-column: auto / span 1;
@@ -231,4 +271,3 @@ progress::-webkit-progress-value {
     grid-column: auto / span 1;
   }
 }
-

@@ -9,6 +9,66 @@ export function insertData() {
     insertChartsData()
     insertRatioData()
     insertAuditsData()
+    insertLevelData()
+}
+async function insertLevelData() {
+
+    const level = await queryData(userLevelQuery)
+    // const XP = await queryData(userXPQuery)
+
+
+
+    const levels = [{
+        minLevel: 0,
+        maxLevel: 9,
+        title: "Aspiring developer"
+    }, {
+        minLevel: 10,
+        maxLevel: 19,
+        title: "Beginner developer"
+    }, {
+        minLevel: 20,
+        maxLevel: 29,
+        title: "Apprentice developer"
+    }, {
+        minLevel: 30,
+        maxLevel: 39,
+        title: "Assistant developer"
+    }, {
+        minLevel: 40,
+        maxLevel: 49,
+        title: "Basic developer"
+    }, {
+        minLevel: 50,
+        maxLevel: 54,
+        title: "Junior developer"
+    }, {
+        minLevel: 55,
+        maxLevel: 59,
+        title: "Confirmed developer"
+    }, {
+        minLevel: 60,
+        maxLevel: 60,
+        title: "Full-Stack developer"
+    }];
+
+    const levelProgress = document.getElementById('levelProgress') as HTMLDivElement
+    const NextLevel = document.getElementById('NextLevel') as HTMLDivElement
+    const levelHolder = document.getElementById('levelHolder') as HTMLDivElement
+    // const xpHolder = document.getElementById('xpHolder') as HTMLSpanElement
+    const currentLevel = level.data?.user?.[0]?.events?.[0]?.level;
+
+
+    for (const lvl of levels) {
+        if (currentLevel >= lvl.minLevel && currentLevel <= lvl.maxLevel) {
+            levelProgress.textContent = lvl.title;
+            NextLevel.textContent = `Next rank in ${((lvl.maxLevel + 1) - currentLevel)} levels`;
+            break;
+        }
+    }
+
+    levelHolder.textContent = currentLevel;
+    // xpHolder.textContent = XP.data.transaction_aggregate.aggregate.sum.amount.toString()
 }
 
 async function insertAuditsData() {
@@ -40,22 +100,17 @@ async function insertAuditsData() {
 }
 
 async function insertProfileData() {
-    // const XP = await queryData(userXPQuery)
-    const level = await queryData(userLevelQuery)
     const Profile = await queryData(userQuery)
 
     const fnameHolder = document.getElementById('fnameHolder') as HTMLSpanElement
     const lnameHolder = document.getElementById('lnameHolder') as HTMLSpanElement
     const emailHolder = document.getElementById('emailHolder') as HTMLSpanElement
     const usernameHolder = document.getElementById('usernameHolder') as HTMLSpanElement
-    const levelHolder = document.getElementById('levelHolder') as HTMLDivElement
-    // const xpHolder = document.getElementById('xpHolder') as HTMLSpanElement
     const cprHolder = document.getElementById('cprHolder') as HTMLSpanElement
     const dobHolder = document.getElementById('dobHolder') as HTMLSpanElement
     const profileImage = document.getElementById('profileImage') as HTMLImageElement
     const picUploadId = Profile.data?.user?.[0]?.attrs?.['pro-picUploadId'];
-    
-    
+
     profileImage.src = `https://learn.reboot01.com/api/storage?token=${localStorage.getItem('token')}&fileId=${picUploadId}`;
     fnameHolder.textContent = Profile.data?.user?.[0]?.attrs?.firstName;
     lnameHolder.textContent = Profile.data?.user?.[0]?.attrs?.lastName;
@@ -63,9 +118,6 @@ async function insertProfileData() {
     usernameHolder.textContent = localStorage.getItem('login')
     cprHolder.textContent = Profile.data?.user?.[0]?.attrs?.CPRnumber;
     dobHolder.textContent = Profile.data?.user?.[0]?.attrs?.dateOfBirth?.split('T')[0];
-
-    levelHolder.textContent = level.data?.user?.[0]?.events?.[0]?.level;
-    // xpHolder.textContent = XP.data.transaction_aggregate.aggregate.sum.amount.toString()
 }
 
 async function insertRatioData() {
@@ -100,25 +152,30 @@ async function insertRatioData() {
 
     if (auditRatio >= 2) {
         AuditRatio.textContent = auditRatio;
+        receivedProgress.classList.add('bar1');
         AuditRatioText.style.color =
-        AuditRatioText.textContent = ' Best ratio ever!';
+            AuditRatioText.textContent = ' Best ratio ever!';
     } else if (auditRatio >= 1.25) {
         AuditRatio.textContent = auditRatio;
+        receivedProgress.classList.add('bar1');
         AuditRatioText.style.color =
-        AuditRatioText.textContent = ' Almost perfect!';
+            AuditRatioText.textContent = ' Almost perfect!';
     } else if (auditRatio >= 1) {
-        AuditRatio.style.color = 'yellow';
         AuditRatio.textContent = auditRatio;
+        receivedProgress.classList.add('bar2');
+        AuditRatio.style.color = 'yellow';
         AuditRatioText.style.color = 'yellow';
         AuditRatioText.textContent = ' You can do better!';
     } else if (auditRatio >= 0.8) {
-        AuditRatio.style.color = 'orange';
         AuditRatio.textContent = auditRatio;
+        receivedProgress.classList.add('bar3');
+        AuditRatio.style.color = 'orange';
         AuditRatioText.style.color = 'orange';
         AuditRatioText.textContent = ' Make more audits!';
     } else {
-        AuditRatio.style.color = 'red';
         AuditRatio.textContent = auditRatio;
+        receivedProgress.classList.add('bar4');
+        AuditRatio.style.color = 'red';
         AuditRatioText.style.color = 'red';
         AuditRatioText.textContent = ' Careful buddy!';
     }

@@ -30,10 +30,6 @@ body {
   background: var(--background-color);
 }
 
-h1 {
-  font-family: "Outfit", sans-serif;
-}
-
 #area {
   position: fixed;
   top: 0;
