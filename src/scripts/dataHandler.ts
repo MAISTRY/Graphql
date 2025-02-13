@@ -10,6 +10,7 @@ export function insertData() {
     insertRatioData()
     insertAuditsData()
 }
+
 async function insertAuditsData() {
     const Audits = await queryData(AuditsQuery)
 
@@ -39,7 +40,7 @@ async function insertAuditsData() {
 }
 
 async function insertProfileData() {
-    const XP = await queryData(userXPQuery)
+    // const XP = await queryData(userXPQuery)
     const level = await queryData(userLevelQuery)
     const Profile = await queryData(userQuery)
 
@@ -48,38 +49,79 @@ async function insertProfileData() {
     const emailHolder = document.getElementById('emailHolder') as HTMLSpanElement
     const usernameHolder = document.getElementById('usernameHolder') as HTMLSpanElement
     const levelHolder = document.getElementById('levelHolder') as HTMLDivElement
-    const xpHolder = document.getElementById('xpHolder') as HTMLSpanElement
+    // const xpHolder = document.getElementById('xpHolder') as HTMLSpanElement
+    const cprHolder = document.getElementById('cprHolder') as HTMLSpanElement
+    const dobHolder = document.getElementById('dobHolder') as HTMLSpanElement
     const profileImage = document.getElementById('profileImage') as HTMLImageElement
     const picUploadId = Profile.data?.user?.[0]?.attrs?.['pro-picUploadId'];
+    
+    
     profileImage.src = `https://learn.reboot01.com/api/storage?token=${localStorage.getItem('token')}&fileId=${picUploadId}`;
-
-
     fnameHolder.textContent = Profile.data?.user?.[0]?.attrs?.firstName;
     lnameHolder.textContent = Profile.data?.user?.[0]?.attrs?.lastName;
     emailHolder.textContent = Profile.data?.user?.[0]?.attrs?.email;
     usernameHolder.textContent = localStorage.getItem('login')
+    cprHolder.textContent = Profile.data?.user?.[0]?.attrs?.CPRnumber;
+    dobHolder.textContent = Profile.data?.user?.[0]?.attrs?.dateOfBirth?.split('T')[0];
+
     levelHolder.textContent = level.data?.user?.[0]?.events?.[0]?.level;
-    xpHolder.textContent = XP.data.transaction_aggregate.aggregate.sum.amount.toString()
+    // xpHolder.textContent = XP.data.transaction_aggregate.aggregate.sum.amount.toString()
 }
 
 async function insertRatioData() {
+
     const Ratio = await queryData(RatioQuery)
+    function formatBytes(bytes: number): string {
+        if (bytes >= 1000000) {
+            return (bytes / 1000000).toFixed(2) + ' MB';
+        } else if (bytes >= 1024) {
+            return Math.round(bytes / 1000) + ' KB';
+        }
+        return bytes + ' B';
+    }
 
     const doneProgress = document.getElementById('doneProgress') as HTMLProgressElement
     const receivedProgress = document.getElementById('receivedProgress') as HTMLProgressElement
     const doneValue = document.getElementById('doneValue') as HTMLSpanElement
     const receivedValue = document.getElementById('receivedValue') as HTMLSpanElement
+    const AuditRatio = document.getElementById('AuditRatio') as HTMLDivElement
+    const AuditRatioText = document.getElementById('AuditRatioText') as HTMLDivElement
 
     const totalUp = Ratio?.data?.user?.[0]?.totalUp;
     const totalDown = Ratio?.data?.user?.[0]?.totalDown;
-    const auditRatio = Ratio?.data?.user?.[0]?.auditRatio;
+    const auditRatio = (Ratio?.data?.user?.[0]?.auditRatio).toFixed(1);
 
     doneProgress.value = totalUp;
     doneProgress.max = totalDown;
-    doneValue.textContent = totalUp;
+    doneValue.textContent = formatBytes(totalUp);
     receivedProgress.value = totalDown;
     receivedProgress.max = totalDown;
-    receivedValue.textContent = totalDown;
+    receivedValue.textContent = formatBytes(totalDown);
+
+    if (auditRatio >= 2) {
+        AuditRatio.textContent = auditRatio;
+        AuditRatioText.style.color =
+        AuditRatioText.textContent = ' Best ratio ever!';
+    } else if (auditRatio >= 1.25) {
+        AuditRatio.textContent = auditRatio;
+        AuditRatioText.style.color =
+        AuditRatioText.textContent = ' Almost perfect!';
+    } else if (auditRatio >= 1) {
+        AuditRatio.style.color = 'yellow';
+        AuditRatio.textContent = auditRatio;
+        AuditRatioText.style.color = 'yellow';
+        AuditRatioText.textContent = ' You can do better!';
+    } else if (auditRatio >= 0.8) {
+        AuditRatio.style.color = 'orange';
+        AuditRatio.textContent = auditRatio;
+        AuditRatioText.style.color = 'orange';
+        AuditRatioText.textContent = ' Make more audits!';
+    } else {
+        AuditRatio.style.color = 'red';
+        AuditRatio.textContent = auditRatio;
+        AuditRatioText.style.color = 'red';
+        AuditRatioText.textContent = ' Careful buddy!';
+    }
 }
 
 async function insertChartsData() {
@@ -94,8 +136,8 @@ async function insertChartsData() {
     var options1 = {
         chart: {
             type: "radar",
-            height: 500,
-            width: 500,
+            height: window.innerHeight * 0.5,
+            width: "100%",
             foreColor: "#fff",
             toolbar: {
                 show: false,
@@ -150,8 +192,8 @@ async function insertChartsData() {
     var options2 = {
         chart: {
             type: "radar",
-            height: 480,
-            width: 500,
+            height: window.innerHeight * 0.5,
+            width: "100%",
             foreColor: "#fff",
             toolbar: {
                 show: false,

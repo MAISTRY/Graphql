@@ -6,7 +6,7 @@ export function setupCorePage() {
     const container = document.createElement('div')
     container.classList.add('container')
 
-// -------------------------------------------------------
+    // -------------------------------------------------------
 
     const UserProfile = document.createElement('section')
     UserProfile.classList.add('section')
@@ -52,13 +52,14 @@ export function setupCorePage() {
     Username.textContent = 'Username: '
     const UsernameHolder = document.createElement('span')
     UsernameHolder.id = 'usernameHolder'
-    const Level = document.createElement('div')
-    Level.textContent = 'Level: '
-    const LevelHolder = document.createElement('span')
-    const XP = document.createElement('div')
-    XP.textContent = 'XP: '
-    const XPHolder = document.createElement('span')
-    XPHolder.id = 'xpHolder'
+    const CPR = document.createElement('div')
+    CPR.textContent = 'CPR: '
+    const CPRHolder = document.createElement('span')
+    CPRHolder.id = 'cprHolder'
+    const dateOfBirth = document.createElement('div')
+    dateOfBirth.textContent = 'Date Of Birth: '
+    const DOBHolder = document.createElement('span')
+    DOBHolder.id = 'dobHolder'
 
     ImageWarpper.appendChild(Image)
     Fname.appendChild(FnameHolder)
@@ -69,10 +70,10 @@ export function setupCorePage() {
     Details1.appendChild(Email)
     Username.appendChild(UsernameHolder)
     Details2.appendChild(Username)
-    Level.appendChild(LevelHolder)
-    Details2.appendChild(Level)
-    XP.appendChild(XPHolder)
-    Details2.appendChild(XP)
+    CPR.appendChild(CPRHolder)
+    Details2.appendChild(CPR)
+    dateOfBirth.appendChild(DOBHolder)
+    Details2.appendChild(dateOfBirth)
     DetailsContainer.appendChild(Details1)
     DetailsContainer.appendChild(Details2)
     UserContent.appendChild(ImageWarpper)
@@ -81,7 +82,7 @@ export function setupCorePage() {
     UserProfile.appendChild(UserTitle)
     UserProfile.appendChild(UserContent)
 
-// -------------------------------------------------------
+    // -------------------------------------------------------
 
     const level = document.createElement('div')
     level.classList.add('section')
@@ -97,24 +98,14 @@ export function setupCorePage() {
 
     level.appendChild(LevelTitle)
     level.appendChild(LevelContent)
-    
-// -------------------------------------------------------
-    
-    const test1 = document.createElement('div')
-    test1.classList.add('section')
-    test1.classList.add('section-large')
-    
-// -------------------------------------------------------
-    
-    const test2 = document.createElement('div')
-    test2.classList.add('section')
 
-// -------------------------------------------------------
-    
-    const test3 = document.createElement('div')
-    test3.classList.add('section')
-    
-// -------------------------------------------------------
+    // -------------------------------------------------------
+
+    const auditsTable = document.createElement('div')
+    auditsTable.classList.add('section')
+    auditsTable.classList.add('section-large')
+
+    // -------------------------------------------------------
 
     const Ratio = document.createElement('div')
     Ratio.classList.add('section')
@@ -122,10 +113,10 @@ export function setupCorePage() {
     const AuditTitle = document.createElement('h1')
     AuditTitle.classList.add('Title')
     AuditTitle.textContent = 'Audits ratio'
-    
+
     const AuditContent = document.createElement('div')
     AuditContent.classList.add('AuditContent')
-    
+
     const doneProgressBar = document.createElement('div')
     const doneText = document.createElement('span')
     doneText.textContent = 'Done'
@@ -134,7 +125,7 @@ export function setupCorePage() {
     doneBar.id = ('doneProgress')
     const doneValue = document.createElement('span')
     doneValue.id = 'doneValue'
-    
+
     doneDiv.appendChild(doneBar)
     doneDiv.appendChild(doneValue)
     doneProgressBar.appendChild(doneText)
@@ -149,6 +140,20 @@ export function setupCorePage() {
     const ReceivedValue = document.createElement('span')
     ReceivedValue.id = 'receivedValue'
 
+    const AuditRatioholder = document.createElement('div')
+    AuditRatioholder.classList.add('AuditRatioNumber')
+
+    const AuditRatio = document.createElement('div')
+    AuditRatio.classList.add('AuditRatio')
+    AuditRatio.id = 'AuditRatio'
+
+    const AuditRatioText = document.createElement('div')
+    AuditRatioText.id = 'AuditRatioText'
+
+
+    AuditRatioholder.appendChild(AuditRatio)
+    AuditRatioholder.appendChild(AuditRatioText)
+
     ReceivedDiv.appendChild(ReceivedBar)
     ReceivedDiv.appendChild(ReceivedValue)
     ReceivedProgressBar.appendChild(ReceivedText)
@@ -159,8 +164,9 @@ export function setupCorePage() {
 
     Ratio.appendChild(AuditTitle)
     Ratio.appendChild(AuditContent)
+    Ratio.appendChild(AuditRatioholder)
 
-// -------------------------------------------------------
+    // -------------------------------------------------------
 
     const ChartHolder1 = document.createElement('div')
     ChartHolder1.classList.add('section')
@@ -175,7 +181,7 @@ export function setupCorePage() {
     ChartHolder1.appendChild(Chart1Title)
     ChartHolder1.appendChild(chart1)
 
-// -------------------------------------------------------
+    // -------------------------------------------------------
 
     const ChartHolder2 = document.createElement('div')
     ChartHolder2.classList.add('section')
@@ -190,35 +196,45 @@ export function setupCorePage() {
     ChartHolder2.appendChild(Chart2Title)
     ChartHolder2.appendChild(chart2)
 
-// -------------------------------------------------------
-// to be completed
-const passTable = document.createElement('table');
-passTable.id = 'passAuditTable';
-const passThead = document.createElement('thead');
-const passTbody = document.createElement('tbody');
+    // -------------------------------------------------------
+    
+    const test2 = document.createElement('div')
+    test2.classList.add('section')
 
-const passHeaderRow = document.createElement('tr');
-const passCaptainHeader = document.createElement('th');
-passCaptainHeader.textContent = 'Captain Login';
-const passPathHeader = document.createElement('th');
-passPathHeader.textContent = 'Path';
-passHeaderRow.appendChild(passCaptainHeader);
-passHeaderRow.appendChild(passPathHeader);
-passThead.appendChild(passHeaderRow);
+    // -------------------------------------------------------
 
-passTable.appendChild(passThead);
-passTable.appendChild(passTbody);
+    const test3 = document.createElement('div')
+    test3.classList.add('section')
 
-// -------------------------------------------------------
+    // -------------------------------------------------------
+    // to be completed
+    const passTable = document.createElement('table');
+    passTable.id = 'passAuditTable';
+    const passThead = document.createElement('thead');
+    const passTbody = document.createElement('tbody');
 
-    container.appendChild(UserProfile)
+    const passHeaderRow = document.createElement('tr');
+    const passCaptainHeader = document.createElement('th');
+    passCaptainHeader.textContent = 'Captain Login';
+    const passPathHeader = document.createElement('th');
+    passPathHeader.textContent = 'Path';
+    passHeaderRow.appendChild(passCaptainHeader);
+    passHeaderRow.appendChild(passPathHeader);
+    passThead.appendChild(passHeaderRow);
+
+    passTable.appendChild(passThead);
+    passTable.appendChild(passTbody);
+
+    // -------------------------------------------------------
+
     container.appendChild(level)
+    container.appendChild(UserProfile)
     container.appendChild(Ratio)
-    container.appendChild(test1)
+    container.appendChild(auditsTable)
     container.appendChild(ChartHolder1)
     container.appendChild(ChartHolder2)
-    container.appendChild(test2)
-    container.appendChild(test3)
+    // container.appendChild(test2)
+    // container.appendChild(test3)
 
     fragment.appendChild(container)
     App.appendChild(fragment)

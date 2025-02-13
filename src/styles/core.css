@@ -1,10 +1,9 @@
 .container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-row-gap: 40px;
+  grid-column-gap: 40px;
+  
 }
 
 .section {
@@ -15,6 +14,8 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: var(--transition);
   padding: 20px;
+  grid-column: auto;
+  grid-row: auto;
 }
 
 .section:hover {
@@ -54,11 +55,11 @@ td {
 
 /* Custom Sizes for Specific Sections */
 .section-large {
-  grid-column: span 3;
+  grid-column: auto / span 2;
 }
 
 .section-tall {
-  grid-row: span 2;
+  grid-row: auto / span 2;
 }
 
 /* profile */
@@ -75,6 +76,7 @@ td {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
+  justify-content: center;
   gap: 20px;
 }
 
@@ -125,7 +127,7 @@ td {
 
 #radarChart {
   width: 100% !important;
-  max-width: 400px;
+  min-width: 500px;
   margin: 0 auto;
 }
 
@@ -169,71 +171,64 @@ td {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 0 10px;
   color: var(--chart-line-color);
 }
 
-/* Responsive Adjustments */
-@media (max-width: 1200px) {
-  .container {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-  }
+.AuditRatio {
+  font-size: 40px;
+  font-weight: 500;
+  color: var(--chart-line-color);
+}
 
-  .section-large {
-    grid-column: span 2;
+.AuditRatioNumber {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  gap: 10px;
+  align-items: baseline;
+  color: var(--chart-line-color);
+}
+
+progress {
+  width: 87%;
+  height: 20px;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #ddd; /* Background color */
+  border-radius: 5px;
+}
+
+progress::-webkit-progress-value {
+  background-color: #4caf50; /* Progress color */
+  color: #000;
+  border-radius: 5px;
+}
+
+/* Responsive Adjustments */
+
+@media (max-width: 1300px) {
+  .container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 900px) {
   .container {
-    grid-template-columns: repeat(2, 1fr);
-    padding: 10px;
-  }
-
-  .section-large {
-    grid-column: span 2;
-  }
-
-  .profile-image {
-    width: 100px;
-    height: 100px;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); 
   }
 }
 
 @media (max-width: 600px) {
-  body {
-    padding: 5px;
-  }
-
   .container {
-    grid-template-columns: 1fr;
-    padding: 5px;
-    gap: 10px;
+    grid-template-columns: repeat(1, minmax(0, 1fr)); 
   }
-
-  .section {
-    padding: 15px;
-  }
-
   .section-large {
-    grid-column: span 1;
+    grid-column: auto / span 1;
   }
-
   .section-tall {
-    grid-row: span 1;
-  }
-
-  .details-container {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .details div {
-    padding: 10px;
-  }
-
-  .Title {
-    margin-bottom: 15px;
+    grid-column: auto / span 1;
   }
 }
+

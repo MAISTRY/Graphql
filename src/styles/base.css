@@ -24,7 +24,7 @@
 
 body {
   padding: 20px;
-  line-height: 1.6;
+  /* line-height: 1.6; */
   min-height: 100vh;
   font-family: "Outfit", sans-serif;
   background: var(--background-color);
