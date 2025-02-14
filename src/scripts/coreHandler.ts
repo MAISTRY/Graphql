@@ -1,4 +1,4 @@
-import { logout } from '../main.ts'
+import { logout } from '../main'
 export function setupCorePage() {
 
     const App = document.getElementById('app') as HTMLDivElement

@@ -1,4 +1,4 @@
-import { getToken } from './tokenHandler.ts'
+import { getToken } from './tokenHandler'
 export function setupForm () {
     const App = document.getElementById('app') as HTMLElement
     const fragment = document.createDocumentFragment() as DocumentFragment
