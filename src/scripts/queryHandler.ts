@@ -1,4 +1,4 @@
-import { getStoredToken } from './tokenHandler';
+import { getStoredToken } from './tokenHandler.ts';
 
 export const userQuery = `
 query user {
