@@ -1,7 +1,7 @@
 import { getStoredToken } from './tokenHandler';
 
 export const userQuery = `
-query userLevel {
+query user {
   user {
     attrs
   }
@@ -18,6 +18,7 @@ query userLevel {
 }
 `;
 
+// not used yet
 export const userXPQuery = `
 query totalXP {
   transaction_aggregate(
@@ -35,64 +36,57 @@ query totalXP {
 }
 `;
 
+// not used yet
 export const LeadershipQuery = `
-    query LeadershipCounts($userLogin: String!) {
-  eqCount: group_aggregate(where: { 
-    _and: [
-      { captainLogin: { _eq: $userLogin } },
-      { object: { type: { _eq: "project" } } },
-      { status: { _eq: finished } }
-    ] 
-  }) {
+query LeadershipCounts($userLogin: String!) {
+  eqCount: group_aggregate(
+    where: {_and: [{captainLogin: {_eq: $userLogin}}, {object: {type: {_eq: "project"}}}, {status: {_eq: finished}}]}
+  ) {
     aggregate {
       count
     }
   }
-  
-  neqCount:group_aggregate(where: { 
-    _and: [
-      { captainLogin: { _neq:  $userLogin } },
-      { object: { type: { _eq: "project" } } },
-      { status: { _eq: finished } },
-      { members: { userLogin: { _eq:  $userLogin } } }
-    ] 
-  }) {
+  neqCount: group_aggregate(
+    where: {_and: [{captainLogin: {_neq: $userLogin}}, {object: {type: {_eq: "project"}}}, {status: {_eq: finished}}, {members: {userLogin: {_eq: $userLogin}}}]}
+  ) {
     nodes {
       captainLogin
-		}
+    }
     aggregate {
       count
     }
   }
+}   
+`;
+
+export const TechnoSkillsQuery = `
+query TechnoSkills {
+  transaction(
+    where: {_and: [{type: {_iregex: "(^|[^[:alnum:]_])[[:alnum:]_]*skill_[[:alnum:]_]*($|[^[:alnum:]_])"}}, {type: {_like: "%skill%"}}, {object: {type: {_eq: "project"}}}, {type: {_in: ["skill_git", "skill_go", "skill_js", "skill_html", "skill_css", "skill_unix", "skill_docker", "skill_sql"]}}]}
+    order_by: [{type: asc}, {createdAt: desc}]
+    distinct_on: type
+  ) {
+    amount
+    type
+  }
 }
 `;
 
-export const TechnoSkillsQuery = `{
-    transaction(
-        where: {_and: [{type: {_iregex: "(^|[^[:alnum:]_])[[:alnum:]_]*skill_[[:alnum:]_]*($|[^[:alnum:]_])"}}, {type: {_like: "%skill%"}}, {object: {type: {_eq: "project"}}}, {type: {_in: ["skill_git", "skill_go", "skill_js", "skill_html", "skill_css", "skill_unix", "skill_docker", "skill_sql"]}}]}
-        order_by: [{type: asc}, {createdAt: desc}]
-        distinct_on: type
-    ) {
-        amount
-        type
-    }
-}
-`;
-
-export const TechniSkillsQuery = `{
-        transaction(
-        where: {_and: [{type: {_iregex: "(^|[^[:alnum:]_])[[:alnum:]_]*skill_[[:alnum:]_]*($|[^[:alnum:]_])"}}, {type: {_like: "%skill%"}}, {object: {type: {_eq: "project"}}}, {type: {_in: ["skill_prog", "skill_algo", "skill_sys-admin", "skill_front-end", "skill_back-end", "skill_stats", "skill_ai", "skill_game", "skill_tcp"]}}]}
-        order_by: [{type: asc}, {createdAt: desc}]
-        distinct_on: type
-    ) {
-        amount
-        type
+export const TechniSkillsQuery = `
+query TechniSkills {
+  transaction(
+    where: {_and: [{type: {_iregex: "(^|[^[:alnum:]_])[[:alnum:]_]*skill_[[:alnum:]_]*($|[^[:alnum:]_])"}}, {type: {_like: "%skill%"}}, {object: {type: {_eq: "project"}}}, {type: {_in: ["skill_prog", "skill_algo", "skill_sys-admin", "skill_front-end", "skill_back-end", "skill_stats", "skill_ai", "skill_game", "skill_tcp"]}}]}
+    order_by: [{type: asc}, {createdAt: desc}]
+    distinct_on: type
+  ) {
+    amount
+    type
   }
 }
 `;
 
 export const RatioQuery = `
-{
+query Ratio {
 user {
     totalUp
     totalDown
@@ -102,18 +96,14 @@ user {
 `;
 
 export const AuditsQuery = `
-{
+query Audits {
   user {
-    validAudits: audits_aggregate(where: {grade: {_gte: 1}}) {
+    validAudits: audits_aggregate(
+      where: {grade: {_is_null: false}}
+      order_by: {createdAt: desc}
+    ) {
       nodes {
-        group {
-          captainLogin
-          path
-        }
-      }
-    }
-    failedAudits: audits_aggregate(where: {grade: {_lt: 1}}) {
-      nodes {
+        grade
         group {
           captainLogin
           path
@@ -124,10 +114,48 @@ export const AuditsQuery = `
 }
 `;
 
-
-export const LeadershipVariables: Record<string, any> = {
-    "userLogin": localStorage.getItem('login')
-};
+export const GroupsQuery = `
+query GroupSearch($eventId: Int!, $pathSearch: String!, $status: group_status_enum!) {
+  group(
+    where: {eventId: {_eq: $eventId}, path: {_like: $pathSearch}, status: {_eq: $status}}
+    order_by: [{status: asc}, {updatedAt: desc}]
+  ) {
+    status
+    path
+    updatedAt
+    captainLogin
+    members {
+      userLogin
+      user {
+        firstName
+        lastName
+      }
+    }
+  }
+}
+`;
+export const AUSQuery = `
+query AdvanceUserSearch($userLogin: String!, $status: group_status_enum!) {
+  group(
+    order_by: [{createdAt: desc}]
+    where: {_and: [{path: {_regex: "/bahrain/bh-module/"}}, {members: {user: {login: {_eq: $userLogin}}}}, {status: {_eq: $status}}]}
+  ) {
+    captainLogin
+    createdAt
+    updatedAt
+    eventId
+    path
+    status
+    members {
+      user {
+        login
+        lastName
+        firstName
+      }
+    }
+  }
+}
+`;
 
 export const queryData = async (query: string, variables: Record<string, any> = {}) => {
 

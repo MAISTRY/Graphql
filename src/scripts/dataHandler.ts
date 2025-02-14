@@ -1,7 +1,5 @@
 import { queryData } from './queryHandler.ts'
-// import { LeadershipQuery, LeadershipVariables } from './queryHandler.ts'
-import { userXPQuery, userLevelQuery, userQuery, RatioQuery, AuditsQuery } from './queryHandler.ts'
-import { TechnoSkillsQuery, TechniSkillsQuery } from './queryHandler.ts'
+import { userLevelQuery, userQuery, RatioQuery, AuditsQuery, TechnoSkillsQuery, TechniSkillsQuery, GroupsQuery, AUSQuery } from './queryHandler.ts'
 import ApexCharts from 'apexcharts'
 
 export function insertData() {
@@ -10,13 +8,155 @@ export function insertData() {
     insertRatioData()
     insertAuditsData()
     insertLevelData()
+    initializeSearchHandler()
 }
+
+function initializeSearchHandler() {
+    const GroupSearchButton = document.getElementById('GroupSearchButton') as HTMLButtonElement;
+    const UserSearchButton = document.getElementById('UserSearchButton') as HTMLButtonElement;
+
+
+    GroupSearchButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleGroupSearch();
+    });
+    UserSearchButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleUserSearch();
+    });
+}
+
+async function handleUserSearch() {
+    const Search2Data = document.getElementById('Search2Data') as HTMLDivElement;
+    const UsernameInput = document.getElementById('UserInput-element') as HTMLInputElement;
+    const statusSelect = document.getElementById('UserSelect-element') as HTMLSelectElement;
+
+    const variables: Record<string, any> = {
+        "userLogin": `${UsernameInput.value}`,
+        "status": statusSelect.value
+    };
+
+    Search2Data.innerHTML = '';
+
+    try {
+        const response = await queryData(AUSQuery, variables);
+
+        if (!response?.data?.group || response.data.group.length === 0) {
+            Search2Data.innerHTML = '<p class="no-results">No Data found</p>';
+            return;
+        }
+
+        const UserDataTitle = document.createElement('h1');
+        UserDataTitle.classList.add('Title');
+        UserDataTitle.style.marginTop = '30px';
+        UserDataTitle.textContent = 'Results';
+
+        const UserSearchData = document.createElement('div')
+        UserSearchData.classList.add('GroupSearchData')
+        UserSearchData.id = 'GroupSearchData';
+
+        Search2Data.appendChild(UserDataTitle);
+
+        response.data.group.forEach((group: any) => {
+            const groupElement = document.createElement('div');
+            groupElement.classList.add('group-item');
+
+            const projectName = group.path.split('/').pop();
+            const createdDate = new Date(group.createdAt).toLocaleDateString('en-GB');
+            const updatedDate = new Date(group.updatedAt).toLocaleDateString('en-GB');
+
+            const members = group.members.map((member: any) => {
+                const { firstName, lastName, login } = member.user;
+                return `${firstName} ${lastName} (${login})`;
+            }).join(', ');
+
+            groupElement.innerHTML = `
+                <h3>${projectName}</h3>
+                <p><strong>Status:</strong> ${group.status}</p>
+                <p><strong>Created:</strong> ${createdDate}</p>
+                <p><strong>Last Updated:</strong> ${updatedDate}</p>
+                <p><strong>Captain:</strong> ${group.captainLogin}</p>
+                <p><strong>Team Members:</strong> ${members}</p>
+            `;
+
+            UserSearchData.appendChild(groupElement);
+        });
+
+        Search2Data.appendChild(UserSearchData);
+        Search2Data.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+        console.error('Error fetching groups:', error);
+        Search2Data.innerHTML = '<p class="no-results">An error occurred while fetching groups</p>';
+    }
+}
+
+async function handleGroupSearch() {
+    const SearchData = document.getElementById('SearchData') as HTMLDivElement;
+    const cohortSelect = document.getElementById('CohortSelector') as HTMLSelectElement;
+    const projectInput = document.getElementById('Input-element') as HTMLInputElement;
+    const statusSelect = document.getElementById('Select-element') as HTMLSelectElement;
+
+    const variables: Record<string, any> = {
+        "eventId": cohortSelect.value,
+        "pathSearch": `%${projectInput.value}%`,
+        "status": statusSelect.value
+    };
+
+    SearchData.innerHTML = '';
+
+
+    try {
+        const response = await queryData(GroupsQuery, variables);
+
+        if (!response?.data?.group || response.data.group.length === 0) {
+            SearchData.innerHTML = '<p class="no-results">No groups found</p>';
+            return;
+        }
+
+        const GroupDataTitle = document.createElement('h1')
+        GroupDataTitle.classList.add('Title')
+        GroupDataTitle.style.marginTop = '30px'
+        GroupDataTitle.textContent = 'Resaults'
+
+        const GroupSearchData = document.createElement('div')
+        GroupSearchData.classList.add('GroupSearchData')
+        GroupSearchData.id = 'GroupSearchData'
+
+        SearchData.appendChild(GroupDataTitle)
+
+        response.data.group.forEach((group: any) => {
+            const groupElement = document.createElement('div');
+            groupElement.classList.add('group-item');
+
+            const projectName = group.path.split('/').pop();
+            const date = new Date(group.updatedAt).toLocaleDateString('en-GB');
+            const members = group.members.map((member: any) =>
+                `${member.user.firstName} ${member.user.lastName} (${member.userLogin})`
+            ).join(', ');
+
+            groupElement.innerHTML = `
+            <h3>${projectName}</h3>
+            <p><strong>Status:</strong> ${group.status}</p>
+            <p><strong>Date:</strong> ${date}</p>
+            <p><strong>Leader:</strong> ${group.captainLogin}</p>
+            <p><strong>Members:</strong> ${members}</p>
+            `;
+
+            GroupSearchData.appendChild(groupElement);
+        });
+
+        SearchData.appendChild(GroupSearchData);
+        SearchData.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+        console.error('Error fetching groups:', error);
+        SearchData.innerHTML = '<p class="no-results">An error occurred while fetching groups</p>';
+        return;
+    }
+}
+
 async function insertLevelData() {
 
     const level = await queryData(userLevelQuery)
-    // const XP = await queryData(userXPQuery)
-
-
 
     const levels = [{
         minLevel: 0,
@@ -55,7 +195,6 @@ async function insertLevelData() {
     const levelProgress = document.getElementById('levelProgress') as HTMLDivElement
     const NextLevel = document.getElementById('NextLevel') as HTMLDivElement
     const levelHolder = document.getElementById('levelHolder') as HTMLDivElement
-    // const xpHolder = document.getElementById('xpHolder') as HTMLSpanElement
     const currentLevel = level.data?.user?.[0]?.events?.[0]?.level;
 
 
@@ -68,60 +207,65 @@ async function insertLevelData() {
     }
 
     levelHolder.textContent = currentLevel;
-    // xpHolder.textContent = XP.data.transaction_aggregate.aggregate.sum.amount.toString()
 }
+
+
 
 async function insertAuditsData() {
     const Audits = await queryData(AuditsQuery)
 
     const validAudits = Audits.data.user[0].validAudits.nodes;
-    const failedAudits = Audits.data.user[0].failedAudits.nodes;
 
-    const passTableBody = document.getElementById("passAuditTable")?.getElementsByTagName("tbody")[0];
-    const failTableBody = document.getElementById("failAuditTable")?.getElementsByTagName("tbody")[0];
+    const TableBody = document.getElementById("AuditTable")?.getElementsByTagName("tbody")[0];
 
     function insertRows(audits: any[], tableBody: HTMLTableSectionElement) {
         audits.forEach(audit => {
             const row = tableBody.insertRow();
-            const captainCell = row.insertCell(0);
-            const pathCell = row.insertCell(1);
+            const UserCell = row.insertCell(0);
+            const ProjectCell = row.insertCell(1);
+            const GradeCell = row.insertCell(2);
 
-            captainCell.textContent = audit.group.captainLogin;
-            pathCell.textContent = audit.group.path;
+            if (audit.grade >= 1) {
+                GradeCell.textContent = 'Pass ✅';
+                GradeCell.classList.add('pass');
+            } else {
+                GradeCell.textContent = 'Fail ❌';
+                GradeCell.classList.add('fail');
+            }
+
+            UserCell.textContent = audit.group.captainLogin;
+            ProjectCell.textContent = audit.group.path.replace('/bahrain/bh-module/', '');
         });
     }
 
-    if (passTableBody) {
-        insertRows(validAudits, passTableBody);
-    }
-    if (failTableBody) {
-        insertRows(failedAudits, failTableBody);
+    if (TableBody) {
+        insertRows(validAudits, TableBody);
     }
 }
 
 async function insertProfileData() {
     const Profile = await queryData(userQuery)
 
-    const fnameHolder = document.getElementById('fnameHolder') as HTMLSpanElement
-    const lnameHolder = document.getElementById('lnameHolder') as HTMLSpanElement
+    const FullnameHolder = document.getElementById('fnameHolder') as HTMLSpanElement
+    const phoneHolder = document.getElementById('phoneHolder') as HTMLSpanElement
     const emailHolder = document.getElementById('emailHolder') as HTMLSpanElement
     const usernameHolder = document.getElementById('usernameHolder') as HTMLSpanElement
     const cprHolder = document.getElementById('cprHolder') as HTMLSpanElement
     const dobHolder = document.getElementById('dobHolder') as HTMLSpanElement
     const profileImage = document.getElementById('profileImage') as HTMLImageElement
-    const picUploadId = Profile.data?.user?.[0]?.attrs?.['pro-picUploadId'];
+    const attrs = Profile.data?.user?.[0]?.attrs;
+    const picUploadId = attrs?.['pro-picUploadId'];
 
     profileImage.src = `https://learn.reboot01.com/api/storage?token=${localStorage.getItem('token')}&fileId=${picUploadId}`;
-    fnameHolder.textContent = Profile.data?.user?.[0]?.attrs?.firstName;
-    lnameHolder.textContent = Profile.data?.user?.[0]?.attrs?.lastName;
-    emailHolder.textContent = Profile.data?.user?.[0]?.attrs?.email;
+    FullnameHolder.textContent = `${attrs?.firstName} ${attrs?.lastName}`;
+    phoneHolder.textContent = attrs?.PhoneNumber;
+    emailHolder.textContent = attrs?.email;
     usernameHolder.textContent = localStorage.getItem('login')
-    cprHolder.textContent = Profile.data?.user?.[0]?.attrs?.CPRnumber;
-    dobHolder.textContent = Profile.data?.user?.[0]?.attrs?.dateOfBirth?.split('T')[0];
+    cprHolder.textContent = attrs?.CPRnumber;
+    dobHolder.textContent = new Date(attrs?.dateOfBirth).toLocaleDateString('en-GB');
 }
 
 async function insertRatioData() {
-
     const Ratio = await queryData(RatioQuery)
     function formatBytes(bytes: number): string {
         if (bytes >= 1000000) {

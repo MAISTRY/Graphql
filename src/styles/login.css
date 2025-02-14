@@ -9,6 +9,16 @@
   gap: 20px;
 }
 
+#LoginError {
+  display: none;
+  font-size: 16px;
+  padding: 7px;
+  color: var(--background-color);
+  background-color: var(--logo-color);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
 #mainButton {
   color: white;
   border: none;
@@ -101,6 +111,7 @@
 
 .form-title {
   margin-bottom: 15px;
+  font-size: 40px;
   font-weight: 600;
 }
 
@@ -153,7 +164,7 @@ input:-webkit-autofill:focus {
   color: white;
   border: none;
   outline: none;
-  padding: 5px;
+  padding: 10px;
   line-height: 1;
   font-size: 16px;
   font-family: "Raleway";
@@ -164,12 +175,13 @@ input:-webkit-autofill:focus {
 }
 
 .input-group input + label {
-  left: 5px;
-  top: 26px;
+  left: 137px;
+  top: 29px;
   opacity: 0.5;
   position: absolute;
   pointer-events: none;
   transition: all 0.2s ease-in;
+  font-size: 20px;
 }
 
 .input-group input:focus + label,

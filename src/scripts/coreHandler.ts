@@ -1,3 +1,4 @@
+import { logout } from '../main.ts'
 export function setupCorePage() {
 
     const App = document.getElementById('app') as HTMLDivElement
@@ -8,9 +9,18 @@ export function setupCorePage() {
 
     // -------------------------------------------------------
 
+    const Logout = document.createElement('div')
+    Logout.classList.add('logout')
+    Logout.textContent = 'Logout'
+    Logout.addEventListener('click', () => {
+        logout()
+    })
+
+    // -------------------------------------------------------
+    
     const UserProfile = document.createElement('section')
     UserProfile.classList.add('section')
-    UserProfile.classList.add('section-large')
+    UserProfile.classList.add('Profile')
 
     const UserTitle = document.createElement('h1')
     UserTitle.classList.add('Title')
@@ -35,15 +45,14 @@ export function setupCorePage() {
     const Details2 = document.createElement('div')
     Details2.classList.add('details')
 
-    const Fname = document.createElement('div')
-    Fname.textContent = 'First Name: '
-    const FnameHolder = document.createElement('span')
-    FnameHolder.id = 'fnameHolder'
-
-    const Lname = document.createElement('div')
-    Lname.textContent = 'Last Name: '
-    const LnameHolder = document.createElement('span')
-    LnameHolder.id = 'lnameHolder'
+    const Fullname = document.createElement('div')
+    Fullname.textContent = 'Full Name: '
+    const FullnameHolder = document.createElement('span')
+    FullnameHolder.id = 'fnameHolder'
+    const Phone = document.createElement('div')
+    Phone.textContent = 'Phone: '
+    const PhoneHolder = document.createElement('span')
+    PhoneHolder.id = 'phoneHolder'
     const Email = document.createElement('div')
     Email.textContent = 'Email: '
     const EmailHolder = document.createElement('span')
@@ -62,18 +71,21 @@ export function setupCorePage() {
     DOBHolder.id = 'dobHolder'
 
     ImageWarpper.appendChild(Image)
-    Fname.appendChild(FnameHolder)
-    Details1.appendChild(Fname)
-    Lname.appendChild(LnameHolder)
-    Details1.appendChild(Lname)
+
+    Username.appendChild(UsernameHolder)
+    Details1.appendChild(Username)
+    Phone.appendChild(PhoneHolder)
+    Details1.appendChild(Phone)
     Email.appendChild(EmailHolder)
     Details1.appendChild(Email)
-    Username.appendChild(UsernameHolder)
-    Details2.appendChild(Username)
+
+    Fullname.appendChild(FullnameHolder)
+    Details2.appendChild(Fullname)
     CPR.appendChild(CPRHolder)
     Details2.appendChild(CPR)
     dateOfBirth.appendChild(DOBHolder)
     Details2.appendChild(dateOfBirth)
+
     DetailsContainer.appendChild(Details1)
     DetailsContainer.appendChild(Details2)
     UserContent.appendChild(ImageWarpper)
@@ -81,6 +93,7 @@ export function setupCorePage() {
 
     UserProfile.appendChild(UserTitle)
     UserProfile.appendChild(UserContent)
+    UserProfile.appendChild(Logout)
 
     // -------------------------------------------------------
 
@@ -110,12 +123,6 @@ export function setupCorePage() {
     LevelContent.appendChild(levelHolder)
     level.appendChild(LevelTitle)
     level.appendChild(LevelContent)
-
-    // -------------------------------------------------------
-
-    const auditsTable = document.createElement('div')
-    auditsTable.classList.add('section')
-    auditsTable.classList.add('section-large')
 
     // -------------------------------------------------------
 
@@ -219,32 +226,182 @@ export function setupCorePage() {
     test3.classList.add('section')
 
     // -------------------------------------------------------
-    // to be completed
-    const passTable = document.createElement('table');
-    passTable.id = 'passAuditTable';
-    const passThead = document.createElement('thead');
-    const passTbody = document.createElement('tbody');
+    
+    const auditsTable = document.createElement('div')
+    auditsTable.classList.add('section')
+    auditsTable.classList.add('auditsTable')
 
-    const passHeaderRow = document.createElement('tr');
-    const passCaptainHeader = document.createElement('th');
-    passCaptainHeader.textContent = 'Captain Login';
-    const passPathHeader = document.createElement('th');
-    passPathHeader.textContent = 'Path';
-    passHeaderRow.appendChild(passCaptainHeader);
-    passHeaderRow.appendChild(passPathHeader);
-    passThead.appendChild(passHeaderRow);
+    const auditsTitle = document.createElement('h1')
+    auditsTitle.classList.add('Title')
+    auditsTitle.textContent = 'Audits'
 
-    passTable.appendChild(passThead);
-    passTable.appendChild(passTbody);
+    const AuditTable = document.createElement('table');
+    AuditTable.id = 'AuditTable';
+    const Thead = document.createElement('thead');
+    const Tbody = document.createElement('tbody');
+
+    const HeaderRow = document.createElement('tr');
+    const UserHeader = document.createElement('th');
+    UserHeader.textContent = 'User';
+    const ProjectHeader = document.createElement('th');
+    ProjectHeader.textContent = 'Project';
+    const ResultHeader = document.createElement('th');
+    ResultHeader.textContent = 'Result';
+
+    HeaderRow.appendChild(UserHeader);
+    HeaderRow.appendChild(ProjectHeader);
+    HeaderRow.appendChild(ResultHeader);
+    Thead.appendChild(HeaderRow);
+
+    AuditTable.appendChild(Thead);
+    AuditTable.appendChild(Tbody);
+
+    auditsTable.appendChild(auditsTitle);   
+    auditsTable.appendChild(AuditTable);
+
+    // -------------------------------------------------------
+
+    const GroupSearch = document.createElement('div')
+    GroupSearch.classList.add('section')
+    GroupSearch.classList.add('SearchEngine')
+
+    const GroupSearchTitle = document.createElement('h1')
+    GroupSearchTitle.classList.add('Title')
+    GroupSearchTitle.textContent = 'Group Search'
+
+    const GroupSearchContent = document.createElement('div')
+    GroupSearchContent.classList.add('GroupSearchContent')
+    GroupSearchContent.id = 'GroupSearchContent'    
+
+    const CohortSelector = document.createElement('select')
+    CohortSelector.classList.add('Select-element')
+    CohortSelector.id = 'CohortSelector'
+
+    const CohortOption1 = document.createElement('option')
+    CohortOption1.textContent = 'Cohort 1'
+    CohortOption1.value = '20'
+    const CohortOption2 = document.createElement('option')
+    CohortOption2.textContent = 'Cohort 2'
+    CohortOption2.value = '72'
+    const CohortOption3 = document.createElement('option')
+    CohortOption3.textContent = 'Cohort 3'
+    CohortOption3.value = '250'
+
+    CohortSelector.appendChild(CohortOption1)
+    CohortSelector.appendChild(CohortOption2)
+    CohortSelector.appendChild(CohortOption3)
+
+    const ProjectInput = document.createElement('input')
+    ProjectInput.classList.add('Input-element')
+    ProjectInput.id = 'Input-element'
+    ProjectInput.placeholder = 'Project name'
+
+    const StatusSelector = document.createElement('select')
+    StatusSelector.classList.add('Select-element')
+    StatusSelector.id = 'Select-element'
+
+    const StatusOption1 = document.createElement('option')
+    StatusOption1.textContent = 'Working'
+    StatusOption1.value = 'working'
+    const StatusOption2 = document.createElement('option')  
+    StatusOption2.textContent = 'Audit'
+    StatusOption2.value = 'audit'
+    const StatusOption3 = document.createElement('option')
+    StatusOption3.textContent = 'Setup'
+    StatusOption3.value = 'setup'
+    const StatusOption4 = document.createElement('option')
+    StatusOption4.textContent = 'Finished'
+    StatusOption4.value = 'finished'
+
+    StatusSelector.appendChild(StatusOption1)
+    StatusSelector.appendChild(StatusOption2)
+    StatusSelector.appendChild(StatusOption3)
+    StatusSelector.appendChild(StatusOption4)
+
+    const SearchButton = document.createElement('button')
+    SearchButton.classList.add('Button-element')
+    SearchButton.id = 'GroupSearchButton'
+    SearchButton.textContent = 'Search'
+
+    GroupSearchContent.appendChild(CohortSelector)
+    GroupSearchContent.appendChild(ProjectInput)
+    GroupSearchContent.appendChild(StatusSelector)
+    GroupSearchContent.appendChild(SearchButton)
+
+    const SearchData = document.createElement('div')
+    SearchData.id = 'SearchData'
+    
+    GroupSearch.appendChild(GroupSearchTitle)
+    GroupSearch.appendChild(GroupSearchContent)
+    GroupSearch.appendChild(SearchData)
+    
+    // -------------------------------------------------------
+
+    const UserSearch = document.createElement('div')
+    UserSearch.classList.add('section')
+    UserSearch.classList.add('SearchEngine')
+
+    const UserSearchTitle = document.createElement('h1')
+    UserSearchTitle.classList.add('Title')
+    UserSearchTitle.textContent = 'User Advance Search'
+
+    const UserSearchContent = document.createElement('div')
+    UserSearchContent.classList.add('GroupSearchContent')
+    UserSearchContent.id = 'UserSearchContent'    
+
+    const UserInput = document.createElement('input')
+    UserInput.classList.add('Input-element')
+    UserInput.id = 'UserInput-element'
+    UserInput.placeholder = 'Username'
+
+    const Status2Selector = document.createElement('select')
+    Status2Selector.classList.add('Select-element')
+    Status2Selector.id = 'UserSelect-element'
+
+    const Status2Option1 = document.createElement('option')
+    Status2Option1.textContent = 'Working'
+    Status2Option1.value = 'working'
+    const Status2Option2 = document.createElement('option')  
+    Status2Option2.textContent = 'Audit'
+    Status2Option2.value = 'audit'
+    const Status2Option3 = document.createElement('option')
+    Status2Option3.textContent = 'Setup'
+    Status2Option3.value = 'setup'
+    const Status2Option4 = document.createElement('option')
+    Status2Option4.textContent = 'Finished'
+    Status2Option4.value = 'finished'
+
+    Status2Selector.appendChild(Status2Option1)
+    Status2Selector.appendChild(Status2Option2)
+    Status2Selector.appendChild(Status2Option3)
+    Status2Selector.appendChild(Status2Option4)
+
+    const Search2Button = document.createElement('button')
+    Search2Button.classList.add('Button-element')
+    Search2Button.id = 'UserSearchButton'
+    Search2Button.textContent = 'Search'
+
+    UserSearchContent.appendChild(UserInput)
+    UserSearchContent.appendChild(Status2Selector)
+    UserSearchContent.appendChild(Search2Button)
+
+    const Search2Data = document.createElement('div')
+    Search2Data.id = 'Search2Data'
+    
+    UserSearch.appendChild(UserSearchTitle)
+    UserSearch.appendChild(UserSearchContent)
+    UserSearch.appendChild(Search2Data)
 
     // -------------------------------------------------------
 
     container.appendChild(level)
     container.appendChild(UserProfile)
     container.appendChild(Ratio)
-    container.appendChild(auditsTable)
     container.appendChild(ChartHolder1)
+    container.appendChild(auditsTable)
     container.appendChild(ChartHolder2)
+    container.appendChild(GroupSearch)
+    container.appendChild(UserSearch)
     // container.appendChild(test2)
     // container.appendChild(test3)
 
