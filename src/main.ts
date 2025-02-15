@@ -1,11 +1,11 @@
 import './styles/base.css'
 import './styles/login.css'
 import './styles/core.css'
-import { setupPage } from './scripts/pageHandler'
-import { setupForm } from './scripts/loginHandler'
-import { setupCorePage } from './scripts/coreHandler'
-import { testToken } from './scripts/tokenHandler'
-import { insertData } from './scripts/dataHandler'
+import { setupPage } from './scripts/PageHandler'
+import { setupForm } from './scripts/LoginHandler'
+import { setupCorePage } from './scripts/CoreHandler'
+import { testToken } from './scripts/TokenHandler'
+import { insertData } from './scripts/DataHandler'
 
 export async function router() {
     setupPage()
