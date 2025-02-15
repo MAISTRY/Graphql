@@ -1,5 +1,5 @@
-import { queryData } from './queryHandler.ts'
-import { userLevelQuery, userQuery, RatioQuery, AuditsQuery, TechnoSkillsQuery, TechniSkillsQuery, GroupsQuery, AUSQuery } from './queryHandler.ts'
+import { queryData } from './queryHandler'
+import { userLevelQuery, userQuery, RatioQuery, AuditsQuery, TechnoSkillsQuery, TechniSkillsQuery, GroupsQuery, AUSQuery } from './queryHandler'
 import ApexCharts from 'apexcharts'
 
 export function insertData() {

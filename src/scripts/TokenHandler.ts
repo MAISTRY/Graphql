@@ -1,5 +1,5 @@
-import { closeForm } from './loginHandler.ts';
-import { login } from '../main.ts';
+import { closeForm } from './loginHandler';
+import { login } from '../main';
 
 export function getToken() {
     const LoginForm = document.querySelector('form.modal') as HTMLFormElement;
