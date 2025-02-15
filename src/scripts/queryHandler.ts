@@ -1,5 +1,3 @@
-import { getStoredToken } from './tokenHandler';
-
 export const userQuery = `
 query user {
   user {
@@ -164,7 +162,7 @@ export const queryData = async (query: string, variables: Record<string, any> = 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getStoredToken()}`
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({ query, variables })
         });

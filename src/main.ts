@@ -4,14 +4,15 @@ import './styles/core.css'
 import { setupPage } from './scripts/pageHandler'
 import { setupForm } from './scripts/loginHandler'
 import { setupCorePage } from './scripts/coreHandler'
-import { getStoredToken, removeToken, testToken } from './scripts/tokenHandler'
+import { testToken } from './scripts/tokenHandler'
 import { insertData } from './scripts/dataHandler'
 
 export async function router() {
     setupPage()
     if ( await testToken() === false) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('login');    
         setupForm();
-        removeToken();
     } else {
         console.log('token found')
         setupCorePage()
@@ -20,15 +21,15 @@ export async function router() {
 }
 
 export function logout() {
-    if (getStoredToken()) {
-        removeToken()
+    if (localStorage.getItem('token')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('login');    
         location.reload()
     }
     setupForm()
 }
 
 export function login() {
-    // removeToken()
     location.reload()
 }
 

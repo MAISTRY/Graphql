@@ -1,6 +1,3 @@
-import { closeForm } from './loginHandler';
-import { login } from '../main';
-
 export function getToken() {
     const LoginForm = document.querySelector('form.modal') as HTMLFormElement;
     const usernameInput = document.querySelector('#name') as HTMLInputElement;
@@ -58,8 +55,9 @@ export function getToken() {
         passwordInput.value = '';
         usernameInput.className = '';
         passwordInput.className = '';
-        closeForm();
-        login();
+        const button = document.getElementById('mainButton') as HTMLElement;
+        button.className = '';
+        location.reload();
     };
 }
 
@@ -94,7 +92,7 @@ export async function testToken(): Promise<boolean> {
         const response = await fetch("https://learn.reboot01.com/api/graphql-engine/v1/graphql", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${getStoredToken()}`,
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(UserQuery)
@@ -115,13 +113,4 @@ export async function testToken(): Promise<boolean> {
         console.error("Fetch error:", error);
         return false;
     }
-}
-
-export function getStoredToken(): string | null {
-    return localStorage.getItem('token');
-}
-
-export function removeToken(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('login');
 }

@@ -109,7 +109,7 @@ const checkInput = (input: HTMLInputElement): void => {
     }
 };
 
-export const closeForm = (): void => {
+const closeForm = (): void => {
     const button = document.getElementById('mainButton') as HTMLElement;
     button.className = '';
 };
