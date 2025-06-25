@@ -122,6 +122,47 @@ query GroupSearch($eventId: Int!, $pathSearch: String!, $status: group_status_en
     path
     updatedAt
     captainLogin
+    eventId
+    event {
+      id
+      campus
+      path
+      createdAt
+    }
+    members {
+      userLogin
+      user {
+        firstName
+        lastName
+      }
+    }
+  }
+}
+`;
+
+export const GroupsAllCohortsQuery = `
+query GroupSearchAllCohorts($pathSearch: String!, $status: group_status_enum!) {
+  group(
+    where: {
+      _and: [
+        {path: {_like: $pathSearch}},
+        {status: {_eq: $status}},
+        {path: {_regex: "/bahrain/bh-module/"}}
+      ]
+    }
+    order_by: [{status: asc}, {updatedAt: desc}]
+  ) {
+    status
+    path
+    updatedAt
+    captainLogin
+    eventId
+    event {
+      id
+      campus
+      path
+      createdAt
+    }
     members {
       userLogin
       user {
@@ -155,6 +196,65 @@ query AdvanceUserSearch($userLogin: String!, $status: group_status_enum!) {
 }
 `;
 
+export const usersAboveLevelAllQuery = `
+query UsersLevelGreaterThanAll($level: Int!) {
+  event_user(
+    where: {
+      event: {
+        path: { _eq: "/bahrain/bh-module" }
+      },
+      level: { _gte: $level }
+    }
+    order_by: { level: desc }
+  ) {
+    userLogin
+    level
+    event {
+      campus
+      id
+    }
+  }
+}
+`;
+
+export const usersAboveLevelCohortQuery = `
+query UsersLevelGreaterThanCohort($level: Int!, $eventId: Int!) {
+  event_user(
+    where: {
+      event: {
+        path: { _eq: "/bahrain/bh-module" }
+        id: { _eq: $eventId }
+      },
+      level: { _gte: $level }
+    }
+    order_by: { level: desc }
+  ) {
+    userLogin
+    level
+    event {
+      campus
+      id
+    }
+  }
+}
+`;
+
+export const leadershipCountQuery = `
+query LeadershipCount($userLogin: String!) {
+  group_aggregate(where: {
+    _and: [
+      { captainLogin: { _eq: $userLogin } },
+      { object: { type: { _eq: "project" } } },
+      { status: { _eq: finished } }
+    ]
+  }) {
+    aggregate {
+      count
+    }
+  }
+}
+`;
+
 export const queryData = async (query: string, variables: Record<string, any> = {}) => {
 
     try {
@@ -169,7 +269,7 @@ export const queryData = async (query: string, variables: Record<string, any> = 
 
         if (response.ok) {
             const result = await response.json();
-            console.log('GraphQL response:', result);
+            // console.log('GraphQL response:', result);
             return result;
         } else {
             const errorData = await response.json();

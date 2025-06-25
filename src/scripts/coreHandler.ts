@@ -1,12 +1,40 @@
 import { logout } from '../main'
-export function setupCorePage() {
 
+export function setupCorePage() {
     const App = document.getElementById('app') as HTMLDivElement
     const fragment = document.createDocumentFragment()
 
     const container = document.createElement('div')
     container.classList.add('container')
 
+    // Navigation
+    const navigation = document.createElement('nav')
+    navigation.classList.add('navigation')
+
+    const profileTab = document.createElement('button')
+    profileTab.classList.add('nav-button', 'active')
+    profileTab.id = 'profileTab'
+    profileTab.textContent = 'Profile & Data'
+
+    const searchTab = document.createElement('button')
+    searchTab.classList.add('nav-button')
+    searchTab.id = 'searchTab'
+    searchTab.textContent = 'Search Queries'
+
+    navigation.appendChild(profileTab)
+    navigation.appendChild(searchTab)
+
+    // Page containers
+    const profilePage = document.createElement('div')
+    profilePage.classList.add('page-content', 'active')
+    profilePage.id = 'profilePage'
+
+    const searchPage = document.createElement('div')
+    searchPage.classList.add('page-content', 'hidden')
+    searchPage.id = 'searchPage'
+
+    // -------------------------------------------------------
+    // PROFILE PAGE CONTENT
     // -------------------------------------------------------
 
     const Logout = document.createElement('div')
@@ -22,12 +50,17 @@ export function setupCorePage() {
     UserProfile.classList.add('section')
     UserProfile.classList.add('Profile')
 
+    // Profile Header
+    const ProfileHeader = document.createElement('div')
+    ProfileHeader.classList.add('profile-header')
+
     const UserTitle = document.createElement('h1')
-    UserTitle.classList.add('Title')
+    UserTitle.classList.add('profile-title')
     UserTitle.textContent = 'User Profile'
 
+    // Profile Content
     const UserContent = document.createElement('div')
-    UserContent.classList.add('content')
+    UserContent.classList.add('profile-content')
 
     const ImageWarpper = document.createElement('div')
     ImageWarpper.classList.add('profile-image-wrapper')
@@ -36,62 +69,64 @@ export function setupCorePage() {
     Image.classList.add('profile-image')
     Image.id = 'profileImage'
 
+    // Profile Details Container
     const DetailsContainer = document.createElement('div')
-    DetailsContainer.classList.add('details-container')
+    DetailsContainer.classList.add('profile-details')
 
     const Details1 = document.createElement('div')
-    Details1.classList.add('details')
+    Details1.classList.add('detail-group')
 
     const Details2 = document.createElement('div')
-    Details2.classList.add('details')
+    Details2.classList.add('detail-group')
 
-    const Fullname = document.createElement('div')
-    Fullname.textContent = 'Full Name: '
-    const FullnameHolder = document.createElement('span')
-    FullnameHolder.id = 'fnameHolder'
-    const Phone = document.createElement('div')
-    Phone.textContent = 'Phone: '
-    const PhoneHolder = document.createElement('span')
-    PhoneHolder.id = 'phoneHolder'
-    const Email = document.createElement('div')
-    Email.textContent = 'Email: '
-    const EmailHolder = document.createElement('span')
-    EmailHolder.id = 'emailHolder'
-    const Username = document.createElement('div')
-    Username.textContent = 'Username: '
-    const UsernameHolder = document.createElement('span')
-    UsernameHolder.id = 'usernameHolder'
-    const CPR = document.createElement('div')
-    CPR.textContent = 'CPR: '
-    const CPRHolder = document.createElement('span')
-    CPRHolder.id = 'cprHolder'
-    const dateOfBirth = document.createElement('div')
-    dateOfBirth.textContent = 'Date Of Birth: '
-    const DOBHolder = document.createElement('span')
-    DOBHolder.id = 'dobHolder'
+    // Create detail items with new structure
+    const createDetailItem = (label: string, holderId: string) => {
+        const item = document.createElement('div')
+        item.classList.add('detail-item')
 
+        const labelEl = document.createElement('div')
+        labelEl.classList.add('detail-label')
+        labelEl.textContent = label
+
+        const valueEl = document.createElement('div')
+        valueEl.classList.add('detail-value')
+        valueEl.id = holderId
+
+        item.appendChild(labelEl)
+        item.appendChild(valueEl)
+        return item
+    }
+
+    // Create all detail items
+    const UsernameItem = createDetailItem('Username', 'usernameHolder')
+    const PhoneItem = createDetailItem('Phone', 'phoneHolder')
+    const EmailItem = createDetailItem('Email', 'emailHolder')
+    const FullnameItem = createDetailItem('Full Name', 'fnameHolder')
+    const CPRItem = createDetailItem('CPR', 'cprHolder')
+    const DOBItem = createDetailItem('Date of Birth', 'dobHolder')
+    const LeadershipItem = createDetailItem('Projects Led', 'leadershipHolder')
+
+    // Append image to wrapper
     ImageWarpper.appendChild(Image)
 
-    Username.appendChild(UsernameHolder)
-    Details1.appendChild(Username)
-    Phone.appendChild(PhoneHolder)
-    Details1.appendChild(Phone)
-    Email.appendChild(EmailHolder)
-    Details1.appendChild(Email)
+    // Append detail items to groups
+    Details1.appendChild(UsernameItem)
+    Details1.appendChild(PhoneItem)
+    Details1.appendChild(EmailItem)
 
-    Fullname.appendChild(FullnameHolder)
-    Details2.appendChild(Fullname)
-    CPR.appendChild(CPRHolder)
-    Details2.appendChild(CPR)
-    dateOfBirth.appendChild(DOBHolder)
-    Details2.appendChild(dateOfBirth)
+    Details2.appendChild(FullnameItem)
+    Details2.appendChild(CPRItem)
+    Details2.appendChild(DOBItem)
+    Details2.appendChild(LeadershipItem)
 
+    // Build the profile structure
     DetailsContainer.appendChild(Details1)
     DetailsContainer.appendChild(Details2)
     UserContent.appendChild(ImageWarpper)
     UserContent.appendChild(DetailsContainer)
 
-    UserProfile.appendChild(UserTitle)
+    ProfileHeader.appendChild(UserTitle)
+    UserProfile.appendChild(ProfileHeader)
     UserProfile.appendChild(UserContent)
     UserProfile.appendChild(Logout)
 
@@ -235,6 +270,14 @@ export function setupCorePage() {
     auditsTitle.classList.add('Title')
     auditsTitle.textContent = 'Audits'
 
+    // Create scrollable container for the table
+    const auditsScrollContainer = document.createElement('div')
+    auditsScrollContainer.classList.add('audits-scroll-container')
+    auditsScrollContainer.style.maxHeight = '400px'
+    auditsScrollContainer.style.overflowY = 'auto'
+    auditsScrollContainer.style.border = '1px solid var(--secondary-color)'
+    auditsScrollContainer.style.borderRadius = '8px'
+
     const AuditTable = document.createElement('table');
     AuditTable.id = 'AuditTable';
     const Thead = document.createElement('thead');
@@ -256,9 +299,23 @@ export function setupCorePage() {
     AuditTable.appendChild(Thead);
     AuditTable.appendChild(Tbody);
 
-    auditsTable.appendChild(auditsTitle);   
-    auditsTable.appendChild(AuditTable);
+    // Add table to scrollable container
+    auditsScrollContainer.appendChild(AuditTable);
 
+    auditsTable.appendChild(auditsTitle);
+    auditsTable.appendChild(auditsScrollContainer);
+
+    // -------------------------------------------------------
+    // Add profile sections to profile page
+    profilePage.appendChild(level)
+    profilePage.appendChild(UserProfile)
+    profilePage.appendChild(Ratio)
+    profilePage.appendChild(ChartHolder1)
+    profilePage.appendChild(auditsTable)
+    profilePage.appendChild(ChartHolder2)
+
+    // -------------------------------------------------------
+    // SEARCH PAGE CONTENT
     // -------------------------------------------------------
 
     const GroupSearch = document.createElement('div')
@@ -277,6 +334,9 @@ export function setupCorePage() {
     CohortSelector.classList.add('Select-element')
     CohortSelector.id = 'CohortSelector'
 
+    const CohortOptionAllGroups = document.createElement('option')
+    CohortOptionAllGroups.textContent = 'All Cohorts'
+    CohortOptionAllGroups.value = 'all'
     const CohortOption1 = document.createElement('option')
     CohortOption1.textContent = 'Cohort 1'
     CohortOption1.value = '20'
@@ -286,10 +346,15 @@ export function setupCorePage() {
     const CohortOption3 = document.createElement('option')
     CohortOption3.textContent = 'Cohort 3'
     CohortOption3.value = '250'
+    const CohortOption4 = document.createElement('option')
+    CohortOption4.textContent = 'Cohort 4'
+    CohortOption4.value = '763'
 
+    CohortSelector.appendChild(CohortOptionAllGroups)
     CohortSelector.appendChild(CohortOption1)
     CohortSelector.appendChild(CohortOption2)
     CohortSelector.appendChild(CohortOption3)
+    CohortSelector.appendChild(CohortOption4)
 
     const ProjectInput = document.createElement('input')
     ProjectInput.classList.add('Input-element')
@@ -394,16 +459,100 @@ export function setupCorePage() {
 
     // -------------------------------------------------------
 
-    container.appendChild(level)
-    container.appendChild(UserProfile)
-    container.appendChild(Ratio)
-    container.appendChild(ChartHolder1)
-    container.appendChild(auditsTable)
-    container.appendChild(ChartHolder2)
-    container.appendChild(GroupSearch)
-    container.appendChild(UserSearch)
-    // container.appendChild(test2)
-    // container.appendChild(test3)
+    const UsersAboveLevel = document.createElement('div')
+    UsersAboveLevel.classList.add('section')
+    UsersAboveLevel.classList.add('SearchEngine')
+
+    const UsersAboveLevelTitle = document.createElement('h1')
+    UsersAboveLevelTitle.classList.add('Title')
+    UsersAboveLevelTitle.textContent = 'Users Above Level'
+
+    const UsersAboveLevelContent = document.createElement('div')
+    UsersAboveLevelContent.classList.add('GroupSearchContent')
+
+    const LevelInputCombined = document.createElement('input')
+    LevelInputCombined.classList.add('Input-element')
+    LevelInputCombined.id = 'LevelInputCombined'
+    LevelInputCombined.placeholder = 'Minimum Level'
+    LevelInputCombined.type = 'number'
+    LevelInputCombined.min = '0'
+    LevelInputCombined.value = '0'
+
+    const CohortSelectorCombined = document.createElement('select')
+    CohortSelectorCombined.classList.add('Select-element')
+    CohortSelectorCombined.id = 'CohortSelectorCombined'
+
+    const CohortOptionAll = document.createElement('option')
+    CohortOptionAll.textContent = 'All Cohorts'
+    CohortOptionAll.value = 'all'
+    const CohortOptionCombined1 = document.createElement('option')
+    CohortOptionCombined1.textContent = 'Cohort 1'
+    CohortOptionCombined1.value = '20'
+    const CohortOptionCombined2 = document.createElement('option')
+    CohortOptionCombined2.textContent = 'Cohort 2'
+    CohortOptionCombined2.value = '72'
+    const CohortOptionCombined3 = document.createElement('option')
+    CohortOptionCombined3.textContent = 'Cohort 3'
+    CohortOptionCombined3.value = '250'
+    const CohortOptionCombined4 = document.createElement('option')
+    CohortOptionCombined4.textContent = 'Cohort 4'
+    CohortOptionCombined4.value = '763'
+
+    CohortSelectorCombined.appendChild(CohortOptionAll)
+    CohortSelectorCombined.appendChild(CohortOptionCombined1)
+    CohortSelectorCombined.appendChild(CohortOptionCombined2)
+    CohortSelectorCombined.appendChild(CohortOptionCombined3)
+    CohortSelectorCombined.appendChild(CohortOptionCombined4)
+
+    const SearchButtonLevel = document.createElement('button')
+    SearchButtonLevel.classList.add('Button-element')
+    SearchButtonLevel.id = 'UsersAboveLevelButton'
+    SearchButtonLevel.textContent = 'Search'
+
+    UsersAboveLevelContent.appendChild(LevelInputCombined)
+    UsersAboveLevelContent.appendChild(CohortSelectorCombined)
+    UsersAboveLevelContent.appendChild(SearchButtonLevel)
+
+    const SearchDataLevel = document.createElement('div')
+    SearchDataLevel.id = 'SearchDataLevel'
+
+    UsersAboveLevel.appendChild(UsersAboveLevelTitle)
+    UsersAboveLevel.appendChild(UsersAboveLevelContent)
+    UsersAboveLevel.appendChild(SearchDataLevel)
+
+    // -------------------------------------------------------
+    // Add search sections to search page
+    searchPage.appendChild(GroupSearch)
+    searchPage.appendChild(UserSearch)
+    searchPage.appendChild(UsersAboveLevel)
+
+    // -------------------------------------------------------
+    // Setup navigation functionality
+    profileTab.addEventListener('click', () => {
+        // Update active states
+        profileTab.classList.add('active')
+        searchTab.classList.remove('active')
+        profilePage.classList.add('active')
+        profilePage.classList.remove('hidden')
+        searchPage.classList.remove('active')
+        searchPage.classList.add('hidden')
+    })
+
+    searchTab.addEventListener('click', () => {
+        // Update active states
+        searchTab.classList.add('active')
+        profileTab.classList.remove('active')
+        searchPage.classList.add('active')
+        searchPage.classList.remove('hidden')
+        profilePage.classList.remove('active')
+        profilePage.classList.add('hidden')
+    })
+
+    // -------------------------------------------------------
+    // Assemble the final structure
+    container.appendChild(navigation)
+    container.appendChild(profilePage)
+    container.appendChild(searchPage)
 
     fragment.appendChild(container)
     App.appendChild(fragment)

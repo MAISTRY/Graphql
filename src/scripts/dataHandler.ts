@@ -1,5 +1,5 @@
 import { queryData } from './queryHandler'
-import { userLevelQuery, userQuery, RatioQuery, AuditsQuery, TechnoSkillsQuery, TechniSkillsQuery, GroupsQuery, AUSQuery } from './queryHandler'
+import { userLevelQuery, userQuery, RatioQuery, AuditsQuery, TechnoSkillsQuery, TechniSkillsQuery, GroupsQuery, GroupsAllCohortsQuery, AUSQuery, usersAboveLevelAllQuery, usersAboveLevelCohortQuery, leadershipCountQuery } from './queryHandler'
 import ApexCharts from 'apexcharts'
 
 export function insertData() {
@@ -8,13 +8,14 @@ export function insertData() {
     insertRatioData()
     insertAuditsData()
     insertLevelData()
+    insertLeadershipData()
     initializeSearchHandler()
 }
 
 function initializeSearchHandler() {
     const GroupSearchButton = document.getElementById('GroupSearchButton') as HTMLButtonElement;
     const UserSearchButton = document.getElementById('UserSearchButton') as HTMLButtonElement;
-
+    const UsersAboveLevelButton = document.getElementById('UsersAboveLevelButton') as HTMLButtonElement;
 
     GroupSearchButton.addEventListener('click', (e) => {
         e.preventDefault();
@@ -23,6 +24,10 @@ function initializeSearchHandler() {
     UserSearchButton.addEventListener('click', (e) => {
         e.preventDefault();
         handleUserSearch();
+    });
+    UsersAboveLevelButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleUsersAboveLevel();
     });
 }
 
@@ -54,6 +59,11 @@ async function handleUserSearch() {
         const UserSearchData = document.createElement('div')
         UserSearchData.classList.add('GroupSearchData')
         UserSearchData.id = 'GroupSearchData';
+        UserSearchData.style.maxHeight = '400px';
+        UserSearchData.style.overflowY = 'auto';
+        UserSearchData.style.border = '1px solid var(--secondary-color)';
+        UserSearchData.style.borderRadius = '8px';
+        UserSearchData.style.padding = '10px';
 
         Search2Data.appendChild(UserDataTitle);
 
@@ -96,17 +106,31 @@ async function handleGroupSearch() {
     const projectInput = document.getElementById('Input-element') as HTMLInputElement;
     const statusSelect = document.getElementById('Select-element') as HTMLSelectElement;
 
-    const variables: Record<string, any> = {
-        "eventId": cohortSelect.value,
-        "pathSearch": `%${projectInput.value}%`,
-        "status": statusSelect.value
-    };
-
     SearchData.innerHTML = '';
 
-
     try {
-        const response = await queryData(GroupsQuery, variables);
+        let response;
+        let cohortText;
+
+        // Use different queries based on selection
+        if (cohortSelect.value === "all") {
+            // Query all cohorts
+            const variables = {
+                "pathSearch": `%${projectInput.value}%`,
+                "status": statusSelect.value
+            };
+            response = await queryData(GroupsAllCohortsQuery, variables);
+            cohortText = "All Cohorts";
+        } else {
+            // Query specific cohort
+            const variables = {
+                "eventId": parseInt(cohortSelect.value),
+                "pathSearch": `%${projectInput.value}%`,
+                "status": statusSelect.value
+            };
+            response = await queryData(GroupsQuery, variables);
+            cohortText = cohortSelect.options[cohortSelect.selectedIndex].text;
+        }
 
         if (!response?.data?.group || response.data.group.length === 0) {
             SearchData.innerHTML = '<p class="no-results">No groups found</p>';
@@ -116,11 +140,16 @@ async function handleGroupSearch() {
         const GroupDataTitle = document.createElement('h1')
         GroupDataTitle.classList.add('Title')
         GroupDataTitle.style.marginTop = '30px'
-        GroupDataTitle.textContent = 'Resaults'
+        GroupDataTitle.textContent = `Results (${cohortText})`
 
         const GroupSearchData = document.createElement('div')
         GroupSearchData.classList.add('GroupSearchData')
         GroupSearchData.id = 'GroupSearchData'
+        GroupSearchData.style.maxHeight = '400px';
+        GroupSearchData.style.overflowY = 'auto';
+        GroupSearchData.style.border = '1px solid var(--secondary-color)';
+        GroupSearchData.style.borderRadius = '8px';
+        GroupSearchData.style.padding = '10px';
 
         SearchData.appendChild(GroupDataTitle)
 
@@ -134,9 +163,23 @@ async function handleGroupSearch() {
                 `${member.user.firstName} ${member.user.lastName} (${member.userLogin})`
             ).join(', ');
 
+            // Get cohort information
+            const getCohortName = (eventId: number) => {
+                switch (eventId) {
+                    case 20: return 'Cohort 1';
+                    case 72: return 'Cohort 2';
+                    case 250: return 'Cohort 3';
+                    case 763: return 'Cohort 4';
+                    default: return `Event ${eventId}`;
+                }
+            };
+
+            const cohortName = getCohortName(group.eventId);
+
             groupElement.innerHTML = `
             <h3>${projectName}</h3>
             <p><strong>Status:</strong> ${group.status}</p>
+            <p><strong>Cohort:</strong> ${cohortName}</p>
             <p><strong>Date:</strong> ${date}</p>
             <p><strong>Leader:</strong> ${group.captainLogin}</p>
             <p><strong>Members:</strong> ${members}</p>
@@ -209,7 +252,30 @@ async function insertLevelData() {
     levelHolder.textContent = currentLevel;
 }
 
+async function insertLeadershipData() {
+    const leadershipHolder = document.getElementById('leadershipHolder') as HTMLSpanElement;
+    const currentUserLogin = localStorage.getItem('login');
 
+    if (!currentUserLogin) {
+        leadershipHolder.textContent = 'N/A';
+        return;
+    }
+
+    try {
+        const variables = { "userLogin": currentUserLogin };
+        const response = await queryData(leadershipCountQuery, variables);
+
+        if (response?.data?.group_aggregate) {
+            const count = response.data.group_aggregate.aggregate.count;
+            leadershipHolder.textContent = count.toString();
+        } else {
+            leadershipHolder.textContent = '0';
+        }
+    } catch (error) {
+        console.error('Error fetching leadership count:', error);
+        leadershipHolder.textContent = 'Error';
+    }
+}
 
 async function insertAuditsData() {
     const Audits = await queryData(AuditsQuery)
@@ -322,6 +388,81 @@ async function insertRatioData() {
         AuditRatio.style.color = 'red';
         AuditRatioText.style.color = 'red';
         AuditRatioText.textContent = ' Careful buddy!';
+    }
+}
+
+async function handleUsersAboveLevel() {
+    const SearchDataLevel = document.getElementById('SearchDataLevel') as HTMLDivElement;
+    const LevelInputCombined = document.getElementById('LevelInputCombined') as HTMLInputElement;
+    const CohortSelectorCombined = document.getElementById('CohortSelectorCombined') as HTMLSelectElement;
+
+    const level = parseInt(LevelInputCombined.value);
+    if (isNaN(level) || level < 0) {
+        SearchDataLevel.innerHTML = '<p class="no-results">Please enter a valid level (0 or higher)</p>';
+        return;
+    }
+
+    SearchDataLevel.innerHTML = '';
+
+    try {
+        let response;
+        let cohortText;
+
+        // Use different queries based on selection
+        if (CohortSelectorCombined.value === "all") {
+            // Query all cohorts
+            const variables = { "level": level };
+            response = await queryData(usersAboveLevelAllQuery, variables);
+            cohortText = "All Cohorts";
+        } else {
+            // Query specific cohort
+            const variables = {
+                "level": level,
+                "eventId": parseInt(CohortSelectorCombined.value)
+            };
+            response = await queryData(usersAboveLevelCohortQuery, variables);
+            cohortText = CohortSelectorCombined.options[CohortSelectorCombined.selectedIndex].text;
+        }
+
+        if (!response?.data?.event_user || response.data.event_user.length === 0) {
+            SearchDataLevel.innerHTML = '<p class="no-results">No users found above this level</p>';
+            return;
+        }
+
+        const DataTitle = document.createElement('h1');
+        DataTitle.classList.add('Title');
+        DataTitle.style.marginTop = '30px';
+        DataTitle.textContent = `Users with Level ${level}+ (${cohortText})`;
+
+        const DataContainer = document.createElement('div');
+        DataContainer.classList.add('GroupSearchData');
+        DataContainer.style.maxHeight = '400px';
+        DataContainer.style.overflowY = 'auto';
+        DataContainer.style.border = '1px solid var(--secondary-color)';
+        DataContainer.style.borderRadius = '8px';
+        DataContainer.style.padding = '10px';
+
+        SearchDataLevel.appendChild(DataTitle);
+
+        response.data.event_user.forEach((user: any) => {
+            const userElement = document.createElement('div');
+            userElement.classList.add('group-item');
+
+            userElement.innerHTML = `
+                <h3>${user.userLogin}</h3>
+                <p><strong>Level:</strong> ${user.level}</p>
+                <p><strong>Campus:</strong> ${user.event.campus}</p>
+                <p><strong>Event ID:</strong> ${user.event.id}</p>
+            `;
+
+            DataContainer.appendChild(userElement);
+        });
+
+        SearchDataLevel.appendChild(DataContainer);
+        SearchDataLevel.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        SearchDataLevel.innerHTML = '<p class="no-results">An error occurred while fetching users</p>';
     }
 }
 

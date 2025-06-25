@@ -107,7 +107,7 @@ export async function testToken(): Promise<boolean> {
             localStorage.setItem('login', data.data.user?.[0]?.login);
         }
 
-        console.log("User data:", data.data);
+        // console.log("User data:", data.data);
         return true;
     } catch (error) {
         console.error("Fetch error:", error);
