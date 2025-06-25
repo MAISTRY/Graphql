@@ -50,7 +50,7 @@ body:has(#LoginPage) {
   position: relative;
 }
 
-#mainButton .btn-text {
+#mainButton .btn-text:hover {
   cursor: pointer;
 }
 
@@ -67,8 +67,13 @@ body:has(#LoginPage) {
   transition: all 0.2s ease-out;
 }
 
-#mainButton {
+#mainButton:hover {
   cursor: default;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+#mainButton:hover:after {
+  transform: translateX(100%) skewX(-30deg);
 }
 
 #mainButton.active {
@@ -105,7 +110,8 @@ body:has(#LoginPage) {
   transition: opacity 0.2s ease-in;
 }
 
-.close-button {
+.close-button:hover {
+  opacity: 0.5;
   cursor: pointer;
 }
 
@@ -127,8 +133,10 @@ body:has(#LoginPage) {
   transition: color 0.2s ease-in, background-color 0.2s ease-in;
 }
 
-.form-button {
+.form-button:hover {
+  color: white;
   cursor: pointer;
+  background-color: transparent;
 }
 
 /* handle MF autofill */
