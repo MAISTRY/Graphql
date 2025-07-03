@@ -465,7 +465,7 @@ export function setupCorePage() {
 
     const UsersAboveLevelTitle = document.createElement('h1')
     UsersAboveLevelTitle.classList.add('Title')
-    UsersAboveLevelTitle.textContent = 'Users Above Level'
+    UsersAboveLevelTitle.textContent = 'Ranking Search'
 
     const UsersAboveLevelContent = document.createElement('div')
     UsersAboveLevelContent.classList.add('GroupSearchContent')
@@ -476,7 +476,6 @@ export function setupCorePage() {
     LevelInputCombined.placeholder = 'Minimum Level'
     LevelInputCombined.type = 'number'
     LevelInputCombined.min = '0'
-    LevelInputCombined.value = '0'
 
     const CohortSelectorCombined = document.createElement('select')
     CohortSelectorCombined.classList.add('Select-element')
@@ -504,6 +503,38 @@ export function setupCorePage() {
     CohortSelectorCombined.appendChild(CohortOptionCombined3)
     CohortSelectorCombined.appendChild(CohortOptionCombined4)
 
+    // Sort By Selector
+    const SortBySelector = document.createElement('select')
+    SortBySelector.classList.add('Select-element')
+    SortBySelector.id = 'SortBy'
+
+    const SortByLevel = document.createElement('option')
+    SortByLevel.value = 'level'
+    SortByLevel.textContent = 'Sort by Level'
+
+    const SortByAuditRatio = document.createElement('option')
+    SortByAuditRatio.value = 'auditRatio'
+    SortByAuditRatio.textContent = 'Sort by Audit Ratio'
+
+    SortBySelector.appendChild(SortByLevel)
+    SortBySelector.appendChild(SortByAuditRatio)
+
+    // Sort Order Selector
+    const SortOrderSelector = document.createElement('select')
+    SortOrderSelector.classList.add('Select-element')
+    SortOrderSelector.id = 'SortOrder'
+
+    const SortOrderAsc = document.createElement('option')
+    SortOrderAsc.value = 'asc'
+    SortOrderAsc.textContent = 'Highest First'
+
+    const SortOrderDesc = document.createElement('option')
+    SortOrderDesc.value = 'desc'
+    SortOrderDesc.textContent = 'Lowest First'
+
+    SortOrderSelector.appendChild(SortOrderDesc)
+    SortOrderSelector.appendChild(SortOrderAsc)
+
     const SearchButtonLevel = document.createElement('button')
     SearchButtonLevel.classList.add('Button-element')
     SearchButtonLevel.id = 'UsersAboveLevelButton'
@@ -511,6 +542,8 @@ export function setupCorePage() {
 
     UsersAboveLevelContent.appendChild(LevelInputCombined)
     UsersAboveLevelContent.appendChild(CohortSelectorCombined)
+    UsersAboveLevelContent.appendChild(SortBySelector)
+    UsersAboveLevelContent.appendChild(SortOrderSelector)
     UsersAboveLevelContent.appendChild(SearchButtonLevel)
 
     const SearchDataLevel = document.createElement('div')

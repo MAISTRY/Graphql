@@ -197,22 +197,21 @@ query AdvanceUserSearch($userLogin: String!, $status: group_status_enum!) {
 `;
 
 export const usersAboveLevelAllQuery = `
-query UsersLevelGreaterThanAll($level: Int!) {
+query UsersLevelGreaterThanAll($level: Int!,  $cohorts: [Int!]!) {
   event_user(
     where: {
       event: {
-        path: { _eq: "/bahrain/bh-module" }
+        path: { _regex: "/bahrain/bh-module" }
       },
-      level: { _gte: $level }
+      level: { _gte: $level },
+      eventId: {_in: $cohorts}
     }
     order_by: { level: desc }
   ) {
     userLogin
     level
-    event {
-      campus
-      id
-    }
+    userAuditRatio
+    eventId
   }
 }
 `;
@@ -231,10 +230,8 @@ query UsersLevelGreaterThanCohort($level: Int!, $eventId: Int!) {
   ) {
     userLogin
     level
-    event {
-      campus
-      id
-    }
+    userAuditRatio
+    eventId
   }
 }
 `;

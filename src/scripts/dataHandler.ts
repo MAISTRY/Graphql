@@ -396,10 +396,11 @@ async function handleUsersAboveLevel() {
     const LevelInputCombined = document.getElementById('LevelInputCombined') as HTMLInputElement;
     const CohortSelectorCombined = document.getElementById('CohortSelectorCombined') as HTMLSelectElement;
 
-    const level = parseInt(LevelInputCombined.value);
+    let level = parseInt(LevelInputCombined.value);
     if (isNaN(level) || level < 0) {
-        SearchDataLevel.innerHTML = '<p class="no-results">Please enter a valid level (0 or higher)</p>';
-        return;
+        // SearchDataLevel.innerHTML = '<p class="no-results">Please enter a valid level (0 or higher)</p>';
+        // return;
+        level = 0;
     }
 
     SearchDataLevel.innerHTML = '';
@@ -411,7 +412,7 @@ async function handleUsersAboveLevel() {
         // Use different queries based on selection
         if (CohortSelectorCombined.value === "all") {
             // Query all cohorts
-            const variables = { "level": level };
+            const variables = { "level": level, "cohorts": [20, 72, 250, 763] };
             response = await queryData(usersAboveLevelAllQuery, variables);
             cohortText = "All Cohorts";
         } else {
@@ -444,15 +445,57 @@ async function handleUsersAboveLevel() {
 
         SearchDataLevel.appendChild(DataTitle);
 
-        response.data.event_user.forEach((user: any) => {
+        // Get sorting preferences
+        const sortBy = (document.getElementById('SortBy') as HTMLSelectElement)?.value || 'level';
+        const sortOrder = (document.getElementById('SortOrder') as HTMLSelectElement)?.value || 'desc';
+
+        // Sort the data based on preferences
+        const sortedUsers = [...response.data.event_user].sort((a: any, b: any) => {
+            let valueA, valueB;
+
+            if (sortBy === 'level') {
+                valueA = a.level;
+                valueB = b.level;
+            } else if (sortBy === 'auditRatio') {
+                valueA = a.userAuditRatio || 0;
+                valueB = b.userAuditRatio || 0;
+            }
+
+            // Reversed logic: asc shows higher values first, desc shows lower values first
+            if (sortOrder === 'asc') {
+                return valueB - valueA; // Higher values first
+            } else {
+                return valueA - valueB; // Lower values first
+            }
+        });
+
+        sortedUsers.forEach((user: any) => {
             const userElement = document.createElement('div');
             userElement.classList.add('group-item');
+
+            // Safe handling of userAuditRatio
+            let auditRatio = 'N/A';
+            if (user.userAuditRatio !== null && user.userAuditRatio !== undefined && typeof user.userAuditRatio === 'number') {
+                auditRatio = user.userAuditRatio.toFixed(2);
+            }
+            let Cohart;
+            if (user.eventId === 20) {
+                Cohart = '1';
+            } else if (user.eventId === 72) {
+                Cohart = '2';
+            } else if (user.eventId === 250) {
+                Cohart = '3';
+            } else if (user.eventId === 763) {
+                Cohart = '4';
+            } else {
+                Cohart = 'Unknown';
+            }
 
             userElement.innerHTML = `
                 <h3>${user.userLogin}</h3>
                 <p><strong>Level:</strong> ${user.level}</p>
-                <p><strong>Campus:</strong> ${user.event.campus}</p>
-                <p><strong>Event ID:</strong> ${user.event.id}</p>
+                <p><strong>Audit Ratio:</strong> ${auditRatio}</p>
+                <p><strong>Cohort:</strong> Cohort ${Cohart}</p>
             `;
 
             DataContainer.appendChild(userElement);

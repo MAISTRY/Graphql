@@ -588,14 +588,6 @@ table tr:not(:last-child) {
   gap: clamp(15px, 2vw, 25px);
 }
 
-@media (min-width: 768px) {
-  .GroupSearchContent {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-end;
-  }
-}
-
 @media (max-width: 767px) {
   .GroupSearchContent {
     flex-direction: column;
@@ -611,6 +603,14 @@ table tr:not(:last-child) {
   .Button-element {
     width: 100%;
     margin-top: 10px;
+  }
+
+  .Profile {
+    grid-column: auto / span 1;
+  }
+
+  .auditsTable {
+    grid-column: auto / span 1;
   }
 }
 
