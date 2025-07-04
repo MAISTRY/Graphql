@@ -37,7 +37,7 @@ async function handleUserSearch() {
     const statusSelect = document.getElementById('UserSelect-element') as HTMLSelectElement;
 
     const variables: Record<string, any> = {
-        "userLogin": `${UsernameInput.value}`,
+        "userLogin": `${UsernameInput.value.toLocaleLowerCase()}`,
         "status": statusSelect.value
     };
 
@@ -115,8 +115,9 @@ async function handleGroupSearch() {
         // Use different queries based on selection
         if (cohortSelect.value === "all") {
             // Query all cohorts
+            console.log(projectInput.value.toLocaleLowerCase());
             const variables = {
-                "pathSearch": `%${projectInput.value}%`,
+                "pathSearch": `%${projectInput.value.toLocaleLowerCase()}%`,
                 "status": statusSelect.value
             };
             response = await queryData(GroupsAllCohortsQuery, variables);
@@ -125,7 +126,7 @@ async function handleGroupSearch() {
             // Query specific cohort
             const variables = {
                 "eventId": parseInt(cohortSelect.value),
-                "pathSearch": `%${projectInput.value}%`,
+                "pathSearch": `%${projectInput.value.toLocaleLowerCase}%`,
                 "status": statusSelect.value
             };
             response = await queryData(GroupsQuery, variables);
