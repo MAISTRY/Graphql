@@ -124,9 +124,10 @@ async function handleGroupSearch() {
             cohortText = "All Cohorts";
         } else {
             // Query specific cohort
+            let path = projectInput.value.toLocaleLowerCase()
             const variables = {
                 "eventId": parseInt(cohortSelect.value),
-                "pathSearch": `%${projectInput.value.toLocaleLowerCase}%`,
+                "pathSearch": `%${path}%`,
                 "status": statusSelect.value
             };
             response = await queryData(GroupsQuery, variables);
